@@ -1,0 +1,18 @@
+{
+  "name": "bs-pancake",
+  "esy": {
+    "build": "dune build",
+   "release": { "bin": [ "lens" ] }
+  },
+  "dependencies": {
+    "@opam/ocaml-migrate-parsetree": ">=1.6.0",
+    "@opam/ppx_tools_versioned": "5.2.3",
+    "@opam/dune": "*",
+    "@opam/reason": "3.5.2"
+  },
+  "devDependencies": {
+    "ocaml": "~4.6.0",
+    "@opam/ocamlformat": "0.13.0",
+    "@opam/merlin": "*"
+  }
+}

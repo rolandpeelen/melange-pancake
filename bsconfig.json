@@ -1,0 +1,17 @@
+{
+    "name" : "bs-pancake",
+    "sources" : [
+        {
+            "dir": "src",
+            "public": ["Pancake"]
+        }
+    ],
+    "refmt": 3,
+    "ppx-flags": [
+        "./ppx"
+    ],
+    "warnings": {
+        "number": "+A-9-40-42"
+    },
+    "bsc-flags": [ "-bs-super-errors" ]
+}
