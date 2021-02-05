@@ -96,21 +96,19 @@ var state = {
   blogs: blogs
 };
 
-console.log("---- ARRAYS ----");
-
 function titleForBlogAtIndexLens(i) {
   return Pancake.Infix.$great$great$neg(Pancake.Infix.$great$great$neg(stateBlogsLens, Pancake.List.atExn(i)), blogTitleLens);
 }
 
-console.log("\n---- View title for blog at index 0:");
+console.log([
+      Pancake.view(titleForBlogAtIndexLens(0), state),
+      Pancake.set(titleForBlogAtIndexLens(0), "Foobar", state),
+      Pancake.over(titleForBlogAtIndexLens(0), (function (prim) {
+              return prim.toUpperCase();
+            }), state)
+    ]);
 
-console.log(Pancake.view(titleForBlogAtIndexLens(0), state));
-
-console.log("\n---- Set title for blog at index 0:");
-
-console.log(Pancake.set(titleForBlogAtIndexLens(0), "Foobar", state));
-
-function titleForBlogAtIndexLensWithDefault(i) {
+function titleForBlogAtIndexLensSafe(i) {
   return Pancake.Infix.$great$great$neg(Pancake.Infix.$great$great$neg(stateBlogsLens, Pancake.List.atOrElse(i, {
                       id: 0,
                       title: "Fallback Title",
@@ -118,15 +116,21 @@ function titleForBlogAtIndexLensWithDefault(i) {
                     })), blogTitleLens);
 }
 
-console.log("\n---- View title for blog at index 0:");
+console.log([
+      Pancake.view(titleForBlogAtIndexLensSafe(0), state),
+      Pancake.set(titleForBlogAtIndexLensSafe(1), "New Title for id 1", state),
+      Pancake.over(titleForBlogAtIndexLensSafe(0), (function (prim) {
+              return prim.toUpperCase();
+            }), state)
+    ]);
 
-console.log(Pancake.view(titleForBlogAtIndexLensWithDefault(0), state));
-
-console.log(Pancake.set(titleForBlogAtIndexLensWithDefault(1), "New Title for id 1", state));
-
-console.log("\n---- View title for blog at index out of bounds (revert to fallback):");
-
-console.log(Pancake.view(titleForBlogAtIndexLensWithDefault(12), state));
+console.log([
+      Pancake.view(titleForBlogAtIndexLensSafe(12), state),
+      Pancake.set(titleForBlogAtIndexLensSafe(12), "This won't work", state),
+      Pancake.over(titleForBlogAtIndexLensSafe(12), (function (prim) {
+              return prim.toUpperCase();
+            }), state)
+    ]);
 
 var List = {
   blogIdLens: blogIdLens,
@@ -136,7 +140,7 @@ var List = {
   blogs: blogs,
   state: state,
   titleForBlogAtIndexLens: titleForBlogAtIndexLens,
-  titleForBlogAtIndexLensWithDefault: titleForBlogAtIndexLensWithDefault
+  titleForBlogAtIndexLensSafe: titleForBlogAtIndexLensSafe
 };
 
 function blogIdLens_get$1(values) {
@@ -233,27 +237,15 @@ function titleForBlogAtIndexLens$1(i) {
   return Pancake.Infix.$great$great$neg(Pancake.Infix.$great$great$neg(stateBlogsLens$1, Pancake.$$Array.atExn(i)), blogTitleLens$1);
 }
 
-console.log("\n---- Uppercase all blog titles:");
+console.log(JSON.stringify([
+          Pancake.view(titleForBlogAtIndexLens$1(0), state$1),
+          Pancake.set(titleForBlogAtIndexLens$1(0), "Foobar", state$1),
+          Pancake.over(titleForBlogAtIndexLens$1(0), (function (prim) {
+                  return prim.toUpperCase();
+                }), state$1)
+        ]));
 
-function upperCaseBlog(param) {
-  return Pancake.over(blogTitleLens$1, (function (prim) {
-                return prim.toUpperCase();
-              }), param);
-}
-
-console.log(Pancake.over(stateBlogsLens$1, (function (param) {
-            return param.map(upperCaseBlog);
-          }), state$1));
-
-console.log("\n---- View title for blog at index 0:");
-
-console.log(Pancake.view(titleForBlogAtIndexLens$1(0), state$1));
-
-console.log("\n---- Set title for blog at index 0:");
-
-console.log(Pancake.set(titleForBlogAtIndexLens$1(0), "Foobar", state$1));
-
-function titleForBlogAtIndexLensWithDefault$1(i) {
+function titleForBlogAtIndexLensSafe$1(i) {
   return Pancake.Infix.$great$great$neg(Pancake.Infix.$great$great$neg(stateBlogsLens$1, Pancake.$$Array.atOrElse(i, {
                       id: 0,
                       title: "Fallback Title",
@@ -261,15 +253,21 @@ function titleForBlogAtIndexLensWithDefault$1(i) {
                     })), blogTitleLens$1);
 }
 
-console.log("\n---- View title for blog at index 0:");
+console.log(JSON.stringify([
+          Pancake.view(titleForBlogAtIndexLensSafe$1(0), state$1),
+          Pancake.set(titleForBlogAtIndexLensSafe$1(1), "New Title for id 1", state$1),
+          Pancake.over(titleForBlogAtIndexLensSafe$1(0), (function (prim) {
+                  return prim.toUpperCase();
+                }), state$1)
+        ]));
 
-console.log(Pancake.view(titleForBlogAtIndexLensWithDefault$1(0), state$1));
-
-console.log(Pancake.set(titleForBlogAtIndexLensWithDefault$1(1), "New Title for id 1", state$1));
-
-console.log("\n---- View title for blog at index out of bounds (revert to fallback):");
-
-console.log(Pancake.view(titleForBlogAtIndexLensWithDefault$1(12), state$1));
+console.log(JSON.stringify([
+          Pancake.view(titleForBlogAtIndexLensSafe$1(12), state$1),
+          Pancake.set(titleForBlogAtIndexLensSafe$1(12), "This won't work", state$1),
+          Pancake.over(titleForBlogAtIndexLensSafe$1(12), (function (prim) {
+                  return prim.toUpperCase();
+                }), state$1)
+        ]));
 
 var $$Array = {
   blogIdLens: blogIdLens$1,
@@ -279,8 +277,7 @@ var $$Array = {
   blogs: blogs$1,
   state: state$1,
   titleForBlogAtIndexLens: titleForBlogAtIndexLens$1,
-  upperCaseBlog: upperCaseBlog,
-  titleForBlogAtIndexLensWithDefault: titleForBlogAtIndexLensWithDefault$1
+  titleForBlogAtIndexLensSafe: titleForBlogAtIndexLensSafe$1
 };
 
 function authorNameLens_get(values) {
@@ -420,27 +417,21 @@ function authorNameLens$1(i) {
                     }, blogAuthorLens)), authorNameLens);
 }
 
-console.log("\n---- View author name for blog at index 0 -- no author:");
+console.log(JSON.stringify([
+          Pancake.view(authorNameLens$1(0), state$2),
+          Pancake.set(authorNameLens$1(0), "Bar", state$2),
+          Pancake.over(authorNameLens$1(0), (function (prim) {
+                  return prim.toUpperCase();
+                }), state$2)
+        ]));
 
-console.log(Pancake.view(authorNameLens$1(0), state$2));
-
-console.log("\n---- Set author name for blog at index 0 -- shoul be bar:");
-
-console.log(Pancake.view(authorNameLens$1(0), Pancake.set(authorNameLens$1(0), "Bar", state$2)));
-
-console.log("\n---- View author name for blog at index 2 -- no author:");
-
-console.log(Pancake.view(authorNameLens$1(2), state$2));
-
-console.log("\n---- Set author name for blog at index 2 -- shoul be baz:");
-
-console.log(Pancake.view(authorNameLens$1(2), Pancake.set(authorNameLens$1(2), "Baz", state$2)));
-
-console.log("\n---- Uppercase author name for blog at index 2 -- ROLAND:");
-
-console.log(Pancake.view(authorNameLens$1(2), Pancake.over(authorNameLens$1(2), (function (prim) {
-                return prim.toUpperCase();
-              }), state$2)));
+console.log(JSON.stringify([
+          Pancake.view(authorNameLens$1(2), state$2),
+          Pancake.set(authorNameLens$1(2), "Bar", state$2),
+          Pancake.over(authorNameLens$1(2), (function (prim) {
+                  return prim.toUpperCase();
+                }), state$2)
+        ]));
 
 var $$Option = {
   blogIdLens: blogIdLens$2,
@@ -556,11 +547,13 @@ console.log("\n\n\n---- Result ----");
 
 var currentBlogTitleLens = Pancake.Infix.$great$great$neg(Pancake.Result.orExn(stateCurrentBlogLens), blogTitleLens$3);
 
-console.log("\n---- View / Update title for current blog within Result:");
-
-console.log(Pancake.view(currentBlogTitleLens, state$3));
-
-console.log(Pancake.set(currentBlogTitleLens, "New Title", state$3));
+console.log(JSON.stringify([
+          Pancake.view(currentBlogTitleLens, state$3),
+          Pancake.set(currentBlogTitleLens, "New Title", state$3),
+          Pancake.over(currentBlogTitleLens, (function (prim) {
+                  return prim.toUpperCase();
+                }), state$3)
+        ]));
 
 var state_blogs$1 = [];
 
@@ -580,15 +573,13 @@ var currentBlogTitleLensFallback = Pancake.Infix.$great$great$neg(Pancake.Result
           body: "Fallback Body"
         }, stateCurrentBlogLens), blogTitleLens$3);
 
-console.log("\n---- View / Update / Over title for current blog within Result in error state with fallback:");
-
-console.log(Pancake.view(currentBlogTitleLensFallback, state$4));
-
-console.log(Pancake.set(currentBlogTitleLensFallback, "Title updated from fallback", state$4));
-
-console.log(Pancake.over(currentBlogTitleLensFallback, (function (prim) {
-            return prim.toUpperCase();
-          }), state$4));
+console.log(JSON.stringify([
+          Pancake.view(currentBlogTitleLensFallback, state$4),
+          Pancake.set(currentBlogTitleLensFallback, "New Title -- Updated fallback", state$4),
+          Pancake.over(currentBlogTitleLensFallback, (function (prim) {
+                  return prim.toUpperCase();
+                }), state$4)
+        ]));
 
 var Result = {
   blogIdLens: blogIdLens$3,
