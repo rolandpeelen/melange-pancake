@@ -6,10 +6,16 @@
             "public": ["Pancake"]
         }
     ],
-    "refmt": 3,
-    "ppx-flags": [
+  "package-specs": [
+    {
+      "module": "commonjs",
+      "in-source": true
+    }
+  ],
+      "ppx-flags": [
         "./ppx"
     ],
+    "refmt": 3,
     "warnings": {
         "number": "+A-9-40-42"
     },
