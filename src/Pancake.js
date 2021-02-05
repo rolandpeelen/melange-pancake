@@ -16,13 +16,6 @@ var LocalHelpers = {
   composeFn: composeFn
 };
 
-function make(getter, setter) {
-  return {
-          get: getter,
-          set: setter
-        };
-}
-
 function view(lens, state) {
   return Curry._1(lens.get, state);
 }
@@ -61,13 +54,18 @@ var Infix = {
   $great$great$neg: pipe
 };
 
-function set$1(xs, i, x) {
-  if (xs.length >= i) {
+function updateAtIndex(xs, i, x) {
+  if (xs.length < i) {
+    return Belt_Array.mapWithIndex(xs, (function (idx, y) {
+                  if (idx === i) {
+                    return x;
+                  } else {
+                    return y;
+                  }
+                }));
+  } else {
     return xs;
   }
-  var copy = xs.slice(0);
-  Belt_Array.set(copy, i, x);
-  return copy;
 }
 
 function atOrElse(i, $$default) {
@@ -76,7 +74,7 @@ function atOrElse(i, $$default) {
               return Belt_Option.getWithDefault(Belt_Array.get(xs, i), $$default);
             }),
           set: (function (x, xs) {
-              return set$1(xs, i, x);
+              return updateAtIndex(xs, i, x);
             })
         };
 }
@@ -87,23 +85,18 @@ function atExn(i) {
               return Belt_Array.getExn(xs, i);
             }),
           set: (function (x, xs) {
-              var copy = xs.slice(0);
-              if (Belt_Array.set(copy, i, x)) {
-                return copy;
-              } else {
-                return xs;
-              }
+              return updateAtIndex(xs, i, x);
             })
         };
 }
 
 var $$Array = {
-  set: set$1,
+  updateAtIndex: updateAtIndex,
   atOrElse: atOrElse,
   atExn: atExn
 };
 
-function set$2(xs, i, x) {
+function updateAtIndex$1(xs, i, x) {
   if (Belt_List.length(xs) < i) {
     return Belt_List.mapWithIndex(xs, (function (idx, y) {
                   if (i === idx) {
@@ -123,7 +116,7 @@ function atOrElse$1(i, $$default) {
               return Belt_Option.getWithDefault(Belt_List.get(xs, i), $$default);
             }),
           set: (function (x, xs) {
-              return set$2(xs, i, x);
+              return updateAtIndex$1(xs, i, x);
             })
         };
 }
@@ -134,13 +127,13 @@ function atExn$1(i) {
               return Belt_List.getExn(xs, i);
             }),
           set: (function (x, xs) {
-              return set$2(xs, i, x);
+              return updateAtIndex$1(xs, i, x);
             })
         };
 }
 
 var List = {
-  set: set$2,
+  updateAtIndex: updateAtIndex$1,
   atOrElse: atOrElse$1,
   atExn: atExn$1
 };
@@ -206,7 +199,6 @@ var Result = {
 };
 
 exports.LocalHelpers = LocalHelpers;
-exports.make = make;
 exports.view = view;
 exports.set = set;
 exports.over = over;
