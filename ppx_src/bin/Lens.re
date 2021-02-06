@@ -37,7 +37,7 @@ let createLenses = (~typeName, ~fields, ()) => {
       let fieldType = Ast_helper.Typ.mk(field.pld_type.ptyp_desc);
 
       let typeDefinition = [%type:
-        Pancake.lens([%t recordType], [%t fieldType])
+        Pancake.Lens.t([%t recordType], [%t fieldType])
       ];
 
       let lensName =

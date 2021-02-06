@@ -1,4 +1,4 @@
-open Pancake.Infix;
+open Pancake.Lens.Infix;
 
 // TODO -- Move to actual tests
 
@@ -27,20 +27,24 @@ module List = {
 
   /* Create lens for a blog at a certain index (throwing if out of bounds) */
   let titleForBlogAtIndexLens = i =>
-    stateBlogsLens >>- Pancake.List.atExn(i) >>- blogTitleLens;
+    stateBlogsLens >>- Pancake.Lens.List.atExn(i) >>- blogTitleLens;
 
   /* View, Set And, Over for that lens */
   (
-    Pancake.view(titleForBlogAtIndexLens(0), state),
-    Pancake.set(titleForBlogAtIndexLens(0), "Foobar", state),
-    Pancake.over(titleForBlogAtIndexLens(0), Js.String.toUpperCase, state),
+    Pancake.Lens.view(titleForBlogAtIndexLens(0), state),
+    Pancake.Lens.set(titleForBlogAtIndexLens(0), "Foobar", state),
+    Pancake.Lens.over(
+      titleForBlogAtIndexLens(0),
+      Js.String.toUpperCase,
+      state,
+    ),
   )
   |> Js.log;
 
   /* Create lens for a blog at a certain index (falling back when out of bounds) */
   let titleForBlogAtIndexLensSafe = i =>
     stateBlogsLens
-    >>- Pancake.List.atOrElse(
+    >>- Pancake.Lens.List.atOrElse(
           i,
           {id: 0, title: "Fallback Title", body: "Fallback Body"},
         )
@@ -48,9 +52,13 @@ module List = {
 
   /* View, Set And, Over for that lens */
   (
-    Pancake.view(titleForBlogAtIndexLensSafe(0), state),
-    Pancake.set(titleForBlogAtIndexLensSafe(1), "New Title for id 1", state),
-    Pancake.over(
+    Pancake.Lens.view(titleForBlogAtIndexLensSafe(0), state),
+    Pancake.Lens.set(
+      titleForBlogAtIndexLensSafe(1),
+      "New Title for id 1",
+      state,
+    ),
+    Pancake.Lens.over(
       titleForBlogAtIndexLensSafe(0),
       Js.String.toUpperCase,
       state,
@@ -60,9 +68,13 @@ module List = {
 
   /* View, Set And, Over for that lens, when out of bounds */
   (
-    Pancake.view(titleForBlogAtIndexLensSafe(12), state),
-    Pancake.set(titleForBlogAtIndexLensSafe(12), "This won't work", state),
-    Pancake.over(
+    Pancake.Lens.view(titleForBlogAtIndexLensSafe(12), state),
+    Pancake.Lens.set(
+      titleForBlogAtIndexLensSafe(12),
+      "This won't work",
+      state,
+    ),
+    Pancake.Lens.over(
       titleForBlogAtIndexLensSafe(12),
       Js.String.toUpperCase,
       state,
@@ -97,13 +109,17 @@ module Array = {
   Js.log("---- ARRAYS ----");
   /* Create lens for a blog at a certain index (throwing if out of bounds) */
   let titleForBlogAtIndexLens = i =>
-    stateBlogsLens >>- Pancake.Array.atExn(i) >>- blogTitleLens;
+    stateBlogsLens >>- Pancake.Lens.Array.atExn(i) >>- blogTitleLens;
 
   /* View, Set And, Over for that lens */
   (
-    Pancake.view(titleForBlogAtIndexLens(0), state),
-    Pancake.set(titleForBlogAtIndexLens(0), "Foobar", state),
-    Pancake.over(titleForBlogAtIndexLens(0), Js.String.toUpperCase, state),
+    Pancake.Lens.view(titleForBlogAtIndexLens(0), state),
+    Pancake.Lens.set(titleForBlogAtIndexLens(0), "Foobar", state),
+    Pancake.Lens.over(
+      titleForBlogAtIndexLens(0),
+      Js.String.toUpperCase,
+      state,
+    ),
   )
   |> Js.Json.stringifyAny
   |> Js.log;
@@ -111,7 +127,7 @@ module Array = {
   /* Create lens for a blog at a certain index (falling back when out of bounds) */
   let titleForBlogAtIndexLensSafe = i =>
     stateBlogsLens
-    >>- Pancake.Array.atOrElse(
+    >>- Pancake.Lens.Array.atOrElse(
           i,
           {id: 0, title: "Fallback Title", body: "Fallback Body"},
         )
@@ -119,9 +135,13 @@ module Array = {
 
   /* View, Set And, Over for that lens */
   (
-    Pancake.view(titleForBlogAtIndexLensSafe(0), state),
-    Pancake.set(titleForBlogAtIndexLensSafe(1), "New Title for id 1", state),
-    Pancake.over(
+    Pancake.Lens.view(titleForBlogAtIndexLensSafe(0), state),
+    Pancake.Lens.set(
+      titleForBlogAtIndexLensSafe(1),
+      "New Title for id 1",
+      state,
+    ),
+    Pancake.Lens.over(
       titleForBlogAtIndexLensSafe(0),
       Js.String.toUpperCase,
       state,
@@ -132,9 +152,13 @@ module Array = {
 
   /* View, Set And, Over for that lens, when out of bounds */
   (
-    Pancake.view(titleForBlogAtIndexLensSafe(12), state),
-    Pancake.set(titleForBlogAtIndexLensSafe(12), "This won't work", state),
-    Pancake.over(
+    Pancake.Lens.view(titleForBlogAtIndexLensSafe(12), state),
+    Pancake.Lens.set(
+      titleForBlogAtIndexLensSafe(12),
+      "This won't work",
+      state,
+    ),
+    Pancake.Lens.over(
       titleForBlogAtIndexLensSafe(12),
       Js.String.toUpperCase,
       state,
@@ -180,26 +204,26 @@ module Option = {
 
   /* Create lens for an autor's name, for a blog at a given index, falling back
      if there is no name */
-  let authorNameLens = i =>
+  let stateAuthorNameLens = i =>
     stateBlogsLens
-    >>- Pancake.Array.atExn(i)
-    >>- (blogAuthorLens |> Pancake.Option.orElse({name: "No Author"}))
+    >>- Pancake.Lens.Array.atExn(i)
+    >>- (blogAuthorLens |> Pancake.Lens.Option.orElse({name: "No Author"}))
     >>- authorNameLens;
 
   /* View, Set And, Over for that lens */
   (
-    Pancake.view(authorNameLens(0), state),
-    Pancake.set(authorNameLens(0), "Bar", state),
-    Pancake.over(authorNameLens(0), Js.String.toUpperCase, state),
+    Pancake.Lens.view(stateAuthorNameLens(0), state),
+    Pancake.Lens.set(stateAuthorNameLens(0), "Bar", state),
+    Pancake.Lens.over(stateAuthorNameLens(0), Js.String.toUpperCase, state),
   )
   |> Js.Json.stringifyAny
   |> Js.log;
 
   /* View, Set And, Over for that lens (with an author in place) */
   (
-    Pancake.view(authorNameLens(2), state),
-    Pancake.set(authorNameLens(2), "Bar", state),
-    Pancake.over(authorNameLens(2), Js.String.toUpperCase, state),
+    Pancake.Lens.view(stateAuthorNameLens(2), state),
+    Pancake.Lens.set(stateAuthorNameLens(2), "Bar", state),
+    Pancake.Lens.over(stateAuthorNameLens(2), Js.String.toUpperCase, state),
   )
   |> Js.Json.stringifyAny
   |> Js.log;
@@ -231,12 +255,12 @@ module Result = {
 
   /* Create lens for a current blog, throwing if it's not there */
   let currentBlogTitleLens =
-    stateCurrentBlogLens |> Pancake.Result.orExn >>- blogTitleLens;
+    stateCurrentBlogLens |> Pancake.Lens.Result.orExn >>- blogTitleLens;
 
   (
-    Pancake.view(currentBlogTitleLens, state),
-    Pancake.set(currentBlogTitleLens, "New Title", state),
-    Pancake.over(currentBlogTitleLens, Js.String.toUpperCase, state),
+    Pancake.Lens.view(currentBlogTitleLens, state),
+    Pancake.Lens.set(currentBlogTitleLens, "New Title", state),
+    Pancake.Lens.over(currentBlogTitleLens, Js.String.toUpperCase, state),
   )
   |> Js.Json.stringifyAny
   |> Js.log;
@@ -245,7 +269,7 @@ module Result = {
   let state = {blogs: [||], currentBlog: Error("Fubar")};
   let currentBlogTitleLensFallback =
     stateCurrentBlogLens
-    |> Pancake.Result.orElse({
+    |> Pancake.Lens.Result.orElse({
          id: 0,
          title: "Fallback Title",
          body: "Fallback Body",
@@ -253,13 +277,17 @@ module Result = {
     >>- blogTitleLens;
 
   (
-    Pancake.view(currentBlogTitleLensFallback, state),
-    Pancake.set(
+    Pancake.Lens.view(currentBlogTitleLensFallback, state),
+    Pancake.Lens.set(
       currentBlogTitleLensFallback,
       "New Title -- Updated fallback",
       state,
     ),
-    Pancake.over(currentBlogTitleLensFallback, Js.String.toUpperCase, state),
+    Pancake.Lens.over(
+      currentBlogTitleLensFallback,
+      Js.String.toUpperCase,
+      state,
+    ),
   )
   |> Js.Json.stringifyAny
   |> Js.log;
