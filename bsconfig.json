@@ -17,7 +17,7 @@
     ],
     "refmt": 3,
     "warnings": {
-        "number": "+A-9-40-42"
+        "number": "+A-9-40-42-102"
     },
     "bsc-flags": [ "-bs-super-errors" ]
 }

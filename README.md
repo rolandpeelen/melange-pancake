@@ -1,8 +1,8 @@
-# :pancakes: Pancake
+# :pancakes: - Pancake
 Named after the famous 40mm Canon 'pancake' lens, a lens that you'd always want
 with you since its so small.
 
-Heavily builds upon:
+Builds upon:
 - [Decco](https://github.com/reasonml-labs/decco)
 - [Lenses-PPX](https://github.com/Astrocoders/lenses-ppx)
 
@@ -19,7 +19,7 @@ type lens('a, 'b) = {
 };
 ```
 This is great. Because with some small helper functions, we can make these 
-compose-able, and get really powerfull functionality. Unfortunately, this 
+composeable, and get really powerful functionality. Unfortunately, this 
 requires loads of boilerplate as we have to write one for each record entry.
 This is cumbersome and in one of the Tenzir Hackathons, we decided to build 
 something that fixes it. Similar to [Lenses-PPX](https://github.com/Astrocoders/lenses-ppx)
@@ -137,5 +137,11 @@ data, all in an immutable way...
 
 # Todo:
 [ ] - Create GH action that builds for OSX and Linux, like [the decco travis one](https://github.com/reasonml-labs/decco/blob/master/.travis.yml)
-[ ] - Handle composition of optional values
-[ ] - Create get / set lens for Array, List
+
+[x] - Create escape hatch for Array, List, Option, Result
+
+[ ] - Automatically build Prisms for Sum Types
+
+[x] - `set` / `view` / `over` for Prisms
+
+[ ] - Prism composition

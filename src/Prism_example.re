@@ -77,14 +77,14 @@ let ageAsString: Prism.t(string, age) = {
   up:
     fun
     | String(x) => Some(x)
-    | _ => None,
+    | Int(_) => None,
   down: x => String(x),
 };
 let ageAsInt: Prism.t(int, age) = {
   up:
     fun
     | Int(x) => Some(x)
-    | _ => None,
+    | String(_) => None,
   down: x => Int(x),
 };
 
@@ -108,3 +108,6 @@ _assert(
   )
   == userUpperOutput,
 );
+
+
+
