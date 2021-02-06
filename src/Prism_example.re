@@ -63,50 +63,47 @@ _assert(
   Prism.over(stringToIntPrism, x => x + 5, "foo") === "foo",
 );
 
-type foo =
-  | Bar(string)
-  | Baz(int);
+type age =
+  | String(string)
+  | Int(int);
 
 [@pancake]
 type user = {
   username: string,
-  foo,
+  age,
 };
 
-let fooToString: Prism.t(string, foo) = {
+let ageAsString: Prism.t(string, age) = {
   up:
     fun
-    | Bar(x) => Some(x)
+    | String(x) => Some(x)
     | _ => None,
-  down: x => Bar(x),
+  down: x => String(x),
 };
-let fooToInt: Prism.t(int, foo) = {
+let ageAsInt: Prism.t(int, age) = {
   up:
     fun
-    | Baz(x) => Some(x)
+    | Int(x) => Some(x)
     | _ => None,
-  down: x => Baz(x),
+  down: x => Int(x),
 };
 
-let user = {username: "bar", foo: Baz(5)};
+let user = {username: "bar", age: Int(5)};
 
-let updateUserFooDouble = user =>
-  Lens.over(userFooLens, Prism.over(fooToInt, add5), user);
-
-let userDoubleOutput = {username: "bar", foo: Baz(10)};
+let userDoubleOutput = {username: "bar", age: Int(10)};
 _assert(
   "Update user foo is possible",
-  Lens.over(userFooLens, Prism.over(fooToInt, add5), user)
+  Lens.over(userAgeLens, Prism.over(ageAsInt, add5), user)
   == userDoubleOutput,
 );
 
-let user = {username: "bar", foo: Bar("bar")};
-let userUpperOutput = {username: "bar", foo: Bar("BAR")};
+let user = {username: "bar", age: String("25")};
+let userUpperOutput = {username: "bar", age: String("25")};
 _assert(
   "Update user foo (uppercase) is possible",
   Lens.over(
-    userFooLens,
-    Prism.over(fooToString, Js.String.toUpperCase),
+    userAgeLens,
+    Prism.over(ageAsString, Js.String.toUpperCase),
     user,
   )
   == userUpperOutput,
