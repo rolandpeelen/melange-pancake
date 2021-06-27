@@ -2,8 +2,8 @@
   "name": "bs-pancake",
   "version": "1.0.0",
   "scripts": {
+    "start": "bsb -clean-world -make-world -w",
     "build-lib": "bsb -clean-world -make-world",
-    "watch": "bsb -clean-world -make-world -w",
     "clean": "rm -rf lib && bsb -clean-world && rm -rf ppx_src/_esy",
     "build-ppx": "cd ppx_src && esy",
     "watch-ppx": "cd ppx_src && esy dune build -w"
@@ -14,5 +14,8 @@
     "/ppx",
     "/ppx-linux.exe",
     "/ppx-osx.exe"
-  ]
+  ],
+  "dependencies": {
+    "bs-platform": "^8.4.2"
+  }
 }
