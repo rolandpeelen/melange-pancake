@@ -2,6 +2,8 @@
 Named after the famous 40mm Canon 'pancake' lens, a lens that you'd always want
 with you since its so small.
 
+*Note* - While this technically works, it currently relies upon building the PPX one-self and it not published anywhere. Please look at the examples, the examples below do show intent but might be slightly outdated.
+
 Builds upon:
 - [Decco](https://github.com/reasonml-labs/decco)
 - [Lenses-PPX](https://github.com/Astrocoders/lenses-ppx)
@@ -34,14 +36,14 @@ cost of an annotation).
 Let's take the following example:
 
 ```reason
-[@lens]
+[@pancake]
 type address = {
     street: string,
     houseNo: int,
     currentlyLivesHere: bool
 }
 
-[@lens]
+[@pancake]
 type user = {
     username: string,
     address
