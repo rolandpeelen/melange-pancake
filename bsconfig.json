@@ -1,23 +1,21 @@
 {
-    "name" : "bs-pancake",
-    "sources" : [
-        {
-            "dir": "src",
-            "public": ["Pancake"]
-        }
-    ],
+  "name": "bs-pancake",
+  "sources": [
+    {
+      "dir": "src",
+      "public": ["Pancake", "Pancake__Lens", "Pancake__Prism"]
+    }
+  ],
   "package-specs": [
     {
       "module": "commonjs",
       "in-source": true
     }
   ],
-      "ppx-flags": [
-        "./ppx"
-    ],
-    "refmt": 3,
-    "warnings": {
-        "number": "+A-9-40-42-102"
-    },
-    "bsc-flags": [ "-bs-super-errors" ]
+  "ppx-flags": ["./ppx"],
+  "refmt": 3,
+  "warnings": {
+    "number": "+A-9-40-42-102"
+  },
+  "bsc-flags": ["-bs-super-errors"]
 }
