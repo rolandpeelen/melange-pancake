@@ -1,8 +1,8 @@
 {
-  "name": "bs-pancake",
+  "name": "pancake",
   "esy": {
-    "build": "dune build",
-    "release": { "bin": ["lens"] }
+    "build": "dune build -p #{self.name}",
+    "release": { "bin": ["pancake"] }
   },
   "devDependencies": {
     "@opam/reason": "^3.7.0",

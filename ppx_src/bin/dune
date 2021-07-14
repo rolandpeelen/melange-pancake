@@ -1,9 +1,5 @@
-(library
-  (name pancake)
-  (public_name pancake)
-  (kind ppx_rewriter)
-  (libraries ppxlib)
-  (preprocess
-  (pps ppxlib.metaquot))
-  (flags (:standard -w -9)) ; 9 = labels not bound in record pattern
-)
+(executable
+ (package pancake)
+ (name bin)
+ (public_name pancake)
+ (libraries pancake))
