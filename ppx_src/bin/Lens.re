@@ -1,5 +1,5 @@
 open Migrate_parsetree;
-open Ast_406;
+open Ast_412;
 open Ast_mapper;
 open Asttypes;
 open Parsetree;
@@ -98,4 +98,5 @@ let mapper = (_, _) => {
   structure: StructureMapper.mapStructure,
 };
 
-Driver.register(~name="pancake", Versions.ocaml_406, mapper);
+let () =
+  Ppxlib.Driver.run_as_ppx_rewriter()
