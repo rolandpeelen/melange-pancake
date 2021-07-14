@@ -2,8 +2,6 @@
 Named after the famous 40mm Canon 'pancake' lens, a lens that you'd always want
 with you since its so small.
 
-*Note* - While this technically works, it currently relies upon building the PPX one-self and it not published anywhere. Please look at the examples, the examples below do show intent but might be slightly outdated.
-
 Builds upon:
 - [Decco](https://github.com/reasonml-labs/decco)
 - [Lenses-PPX](https://github.com/Astrocoders/lenses-ppx)
@@ -138,12 +136,7 @@ data, all in an immutable way...
 
 
 # Todo:
-[ ] - Create GH action that builds for OSX and Linux, like [the decco travis one](https://github.com/reasonml-labs/decco/blob/master/.travis.yml)
-
-[x] - Create escape hatch for Array, List, Option, Result
 
 [ ] - Automatically build Prisms for Sum Types
-
-[x] - `set` / `view` / `over` for Prisms
 
 [ ] - Prism composition
