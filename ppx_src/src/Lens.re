@@ -1,7 +1,4 @@
-open Migrate_parsetree;
-open Ast_412;
-open Ast_mapper;
-open Asttypes;
+open Ppxlib;
 open Parsetree;
 
 let loc = Location.none;
@@ -80,23 +77,27 @@ module StructureMapper = {
     | Error(s) => fail(ptype_loc, s)
     };
   };
-  let mapStructureItem = (mapper, {pstr_desc, _} as structureItem) =>
+  let mapStructureItem = (mapper, { pstr_desc } as structureItem) =>
     switch (pstr_desc) {
     | Pstr_type(_recFlag, decls) =>
       let valueBindings = decls |> List.map(mapTypeDecl) |> List.concat;
-      [mapper.structure_item(mapper, structureItem)]
+      [mapper#structure_item(structureItem)]
       @ (List.length(valueBindings) > 0 ? valueBindings : []);
 
-    | _ => [mapper.structure_item(mapper, structureItem)]
+    | _ => [mapper#structure_item(structureItem)]
     };
-  let mapStructure = (mapper, structure) =>
-    structure |> List.map(mapStructureItem(mapper)) |> List.concat;
 };
 
-let mapper = (_, _) => {
-  ...default_mapper,
-  structure: StructureMapper.mapStructure,
+class mapper = {
+  as self;
+  inherit class Ast_traverse.map;
+  pub! structure = structure => {
+    structure
+    |> List.map(StructureMapper.mapStructureItem(self))
+    |> List.concat;
+  };
 };
 
-let () =
-  Ppxlib.Driver.run_as_ppx_rewriter()
+let structure_mapper = s => (new mapper)#structure(s);
+
+Ppxlib.Driver.register_transformation(~preprocess_impl=structure_mapper, "pancake");
