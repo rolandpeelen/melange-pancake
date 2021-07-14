@@ -2,17 +2,13 @@
   "name": "bs-pancake",
   "esy": {
     "build": "dune build",
-   "release": { "bin": [ "lens" ] }
-  },
-  "dependencies": {
-    "@opam/ocaml-migrate-parsetree": ">=1.6.0",
-    "@opam/ppx_tools_versioned": "5.2.3",
-    "@opam/dune": "*",
-    "@opam/reason": "3.5.2"
+    "release": { "bin": ["lens"] }
   },
   "devDependencies": {
-    "ocaml": "~4.6.0",
-    "@opam/ocamlformat": "0.13.0",
-    "@opam/merlin": "*"
+    "@opam/reason": "^3.7.0",
+    "@opam/dune": ">=2.8.4",
+    "@opam/ppxlib": "^0.22.0",
+    "ocaml": "4.12.x",
+    "@opam/ocaml-lsp-server": "*"
   }
 }
