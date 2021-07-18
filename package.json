@@ -7,13 +7,17 @@
     "clean": "rm -rf lib && bsb -clean-world && rm -rf ppx_src/_esy",
     "build-ppx": "cd ppx_src && esy",
     "watch-ppx": "cd ppx_src && esy dune build -w",
-    "postinstall": "yarn build-ppx"
+    "postinstall": "node postinstall.js"
   },
   "files": [
     "/bsconfig.json",
     "/src",
     "/ppx_src",
-    "/ppx"
+    "/ppx",
+    "/ppx.cmd",
+    "/ppx-linux.exe",
+    "/ppx-osx.exe",
+    "/ppx-windows.exe"
   ],
   "dependencies": {
     "bs-platform": "^8.4.2"
