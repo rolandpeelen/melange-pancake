@@ -28,7 +28,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: macos-ppx
-        path: output/test/code-coverage.html
+        path: ppx_src/_esy/default/build/default/bin/bin.exe 
 
   build-linux:
     name: Build Linux PPX
@@ -45,7 +45,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: linux-ppx
-        path: output/test/code-coverage.html
+        path: ppx_src/_esy/default/build/default/bin/bin.exe 
 
   #npm-release:
     #name: NPM Release
