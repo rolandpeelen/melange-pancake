@@ -29,12 +29,14 @@ jobs:
       with:
         name: macos-ppx
         path: ppx_src/_esy/default/build/default/bin/bin.exe 
+        retention-days: 1
 
   build-linux:
     name: Build Linux PPX
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
       with:
         ref: ${{ github.ref }}
     - name: Install esy
@@ -46,25 +48,36 @@ jobs:
       with:
         name: linux-ppx
         path: ppx_src/_esy/default/build/default/bin/bin.exe 
+        retention-days: 1
 
-  #npm-release:
-    #name: NPM Release
-    #runs-on: ubuntu-latest
-    #if: github.event.action == 'published'
-    #needs: build
-    #steps:
+  npm-release:
+    name: NPM Release
+    runs-on: ubuntu-latest
+    if: github.event.action == 'published'
+    needs: 
+      - build-osx 
+      - build-linux 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
 
-      #- uses: actions/checkout@v2
-        #with:
-          #ref: ${{ github.ref }}
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
 
-      #- uses: actions/setup-node@v1
-        #with:
-          #always-auth: true
-          #registry-url: "https://registry.npmjs.org"
+      - name: Move / Rename Artifacts
+        run: |
+          mv linux-ppx/bin.exe ./ppx-linux.exe
+          mv macos-ppx/bin.exe ./ppx-osx.exe
 
-      #- env:
-          #NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        #run: |
-          #echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-          #yarn publish
+      - uses: actions/setup-node@v1
+        with:
+          always-auth: true
+          registry-url: "https://registry.npmjs.org"
+
+      - env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          yarn publish
