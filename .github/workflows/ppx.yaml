@@ -16,23 +16,17 @@ jobs:
         with:
           access_token: ${{ github.token }}
 
-  build:
+  build-osx:
+    name: Build OSX PPX
     runs-on: macos-latest
     steps:
-
     - uses: actions/checkout@v2
       with:
         ref: ${{ github.ref }}
-
     - name: Install esy
-      run: yarn install --frozen-lockfile
-
-    - name: Install Dependencies
-      run: yarn install --frozen-lockfile
-
+      run: yarn global add esy
     - name: Run Build
       run: yarn build-ppx
-
     - name: Add OSX ppx
       run: mv ppx_src/_esy/default/build/default/bin/bin.exe ppx-osx.exe 
 
