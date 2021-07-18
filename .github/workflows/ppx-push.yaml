@@ -24,7 +24,7 @@ jobs:
       run: yarn global add esy
     - name: Run Build
       run: yarn build-ppx
-    - name: Archive code coverage results
+    - name: Upload Build
       uses: actions/upload-artifact@v2
       with:
         name: macos-ppx
@@ -43,7 +43,7 @@ jobs:
       run: yarn global add esy
     - name: Run Build
       run: yarn build-ppx
-    - name: Archive code coverage results
+    - name: Upload Build
       uses: actions/upload-artifact@v2
       with:
         name: linux-ppx
