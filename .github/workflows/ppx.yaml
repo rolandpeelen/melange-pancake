@@ -1,7 +1,7 @@
-name: Pancake
+name: Pancake PR
 on:
-  release:
-    types: published
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   build-lib:
@@ -9,8 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-      with:
-        ref: ${{ github.ref }}
     - name: Install Dependencies
       run: yarn
     - name: Run Build
@@ -21,8 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-      with:
-        ref: ${{ github.ref }}
     - name: Install Esy
       run: yarn global add esy
     - name: Run Build
