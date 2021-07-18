@@ -11,6 +11,7 @@
   },
   "files": [
     "/bsconfig.json",
+    "/postinstall.js",
     "/src",
     "/ppx_src",
     "/ppx",
