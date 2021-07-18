@@ -4,22 +4,17 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  build-lib:
-    name: Build Lib
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install Dependencies
-      run: yarn
-    - name: Run Build
-      run: yarn build
-
   build-ppx:
-    name: Build PPX
+    name: PR Build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Install Esy
       run: yarn global add esy
-    - name: Run Build
+    - name: Install Dependencies
+      run: yarn
+    - name: Build PPX
       run: yarn build-ppx
+    - name: Build Library
+      run: yarn build-lib
+

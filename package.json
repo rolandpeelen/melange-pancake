@@ -7,7 +7,7 @@
     "clean": "rm -rf lib && bsb -clean-world && rm -rf ppx_src/_esy",
     "build-ppx": "cd ppx_src && esy",
     "watch-ppx": "cd ppx_src && esy dune build -w",
-    "postinstall": "node ./postinstall.js"
+    "postinstall": "node postinstall.js"
   },
   "files": [
     "/bsconfig.json",
