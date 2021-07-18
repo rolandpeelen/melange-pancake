@@ -1,7 +1,7 @@
-name: Pancake
+name: Pancake Build 
 on:
-  pull_request:
-    types: [opened, synchronize]
+  release:
+    types: published
 
 jobs:
   cancel-previous-runs:
