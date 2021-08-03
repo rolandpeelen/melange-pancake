@@ -110,7 +110,7 @@ Lens.view(metricSpeedLens >>- Lens.Result.orElse(1000), metric)
 ```
 
 #### All the way...
-Given some of the above elements, and the nesting of these lenses, it will give
+Given some of the above elements, and the ability to compose lenses, it will give
 you the ability to do some pretty powerfull stuff...
 
 ```reason
