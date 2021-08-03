@@ -1,3 +1,5 @@
+open Function.Infix;
+
 type t('a, 'b) = {
   get: 'a => 'b,
   set: ('b, 'a) => 'a,
@@ -10,8 +12,8 @@ let over = (lens: t('a, 'b), fn: 'b => 'b, state: 'a): 'a =>
   lens.set(lens.get(state) |> fn, state);
 
 let compose = (l0: t('b, 'c), l1: t('a, 'b)): t('a, 'c) => {
-  get: Function.compose(l0.get, l1.get),
-  set: Function.compose(over(l1), l0.set),
+  get: l1.get >> l0.get,
+  set: l0.set >> over(l1),
 };
 let pipe = (l0, l1) => compose(l1, l0);
 
@@ -35,11 +37,12 @@ module Array = {
   };
 
   /* Clones the full array when setting, no mutation returns the original
-       array when setting out of bounds Belt.Array.set is a mutating operation.
-       We want a new array.  Belt.Array.Copy uses splice under the hood, which
-       is O(n), so mapping over the array and replacing the item at index i is
-       just as fast, and infintely more clear than creating intermediate variables
-     */
+     array when setting out of bounds Belt.Array.set is a mutating operation.
+     We want a new array.  Belt.Array.Copy uses splice under the hood, which
+     is O(n), so mapping over the array and replacing the item at index i is
+     just as fast, and infintely more clear than creating intermediate
+     variables. Wraps around when using negative values.
+  */
   let atOrElse = (i: int, default): t(array('a), 'a) => {
     get: (xs: array('a)) => {
       (
@@ -52,8 +55,12 @@ module Array = {
     set: (x: 'a, xs: array('a)) => updateAtIndex(xs, i, x),
   };
 
-  let atExn = (i: int): t(array('a), 'a) => {
-    get: (xs: array('a)) => (Belt.Array.getExn(xs, i): 'a),
+  let atOrExn = (i: int): t(array('a), 'a) => {
+    get: (xs: array('a)) => {
+      i < 0
+        ? Belt.Array.getExn(xs, Belt.Array.length(xs) + i)
+        : Belt.Array.getExn(xs, i);
+    },
     set: (x: 'a, xs: array('a)) => updateAtIndex(xs, i, x),
   };
 };
@@ -109,25 +116,19 @@ module List = {
 };
 
 module Option = {
-  let orElse = (default: 'b, lens: t('a, option('b))): t('a, 'b) => {
-    get: x => lens.get(x)->Belt.Option.getWithDefault(default),
-    set: (x, state) => lens.set(Some(x), state),
+  let orElse = (default: 'b): t('a, 'b) => {
+    get: default |> Function.flip(Belt.Option.getWithDefault),
+    set: (x, _) => Some(x),
   };
 
-  let orExn = (lens: t('a, option('b))): t('a, 'b) => {
-    get: x => lens.get(x)->Belt.Option.getExn,
-    set: (x, state) => lens.set(Some(x), state),
-  };
+  let orExn: t('a, 'b) = {get: Belt.Option.getExn, set: (x, _) => Some(x)};
 };
 
 module Result = {
-  let orElse = (default: 'b, lens: t('a, result('b, 'c))): t('a, 'b) => {
-    get: x => lens.get(x)->Belt.Result.getWithDefault(default),
-    set: (x, state) => lens.set(Ok(x), state),
+  let orElse = (default: 'b): t('a, 'b) => {
+    get: default |> (Belt.Result.getWithDefault |> Function.flip),
+    set: (x, _) => Ok(x),
   };
 
-  let orExn = (lens: t('a, result('b, 'c))): t('a, 'b) => {
-    get: x => lens.get(x)->Belt.Result.getExn,
-    set: (x, state) => lens.set(Ok(x), state),
-  };
+  let orExn: t('a, 'b) = {get: Belt.Result.getExn, set: (x, _) => Ok(x)};
 };
