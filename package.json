@@ -8,7 +8,7 @@
     "build-ppx": "cd ppx_src && esy",
     "watch-ppx": "cd ppx_src && esy dune build -w",
     "postinstall": "node postinstall.js",
-    "test": "yarn run build-ppx && yarn run build-lib && jest --coverage",
+    "test": "jest --coverage",
     "tdd": "jest --watchAll"
   },
   "files": [

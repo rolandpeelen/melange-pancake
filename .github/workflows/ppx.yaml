@@ -17,4 +17,5 @@ jobs:
       run: yarn build-ppx
     - name: Build Library
       run: yarn build-lib
-
+    - name: Run tests
+      run: yarn test 
