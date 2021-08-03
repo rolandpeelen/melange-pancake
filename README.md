@@ -123,19 +123,19 @@ type company = {parsedAddress: result(address, string)};
 [@pancake]
 type account = {company: option(company)};
 
-let emptyAccount = {company: None};
-
-Lens.set(
+let setCountry = (country, account) => Lens.set(
   accountCompanyLens
   >>- Lens.Option.orElse({parsedAddress: Error("No Parsed Address")})
   >>- companyParsedAddressLens
   >>- Lens.Result.orElse({country: None})
   >>- addressCountryLens
   >>- Lens.Option.orElse("Some Fallback Country"),
-  "Netherlands",
-  accountThree,
+  country,
+  account,
 );
-// -> {company: Some({parsedAddress: Ok({country: Some("Netherlands")})})}
+
+let emptyAccount = {company: None};
+// setCountry("Netherlands", emptyAccount)-> {company: Some({parsedAddress: Ok({country: Some("Netherlands")})})}
 ```
 
 For more examples, check the tests.
