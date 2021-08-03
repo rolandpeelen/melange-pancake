@@ -30,110 +30,115 @@ Combined with the helper functions defined in this library, you get fully
 typesafe lenses that are very easily composable for free (or well, at the 
 cost of an annotation).
 
-# Example
+# Examples
 Let's take the following example:
 
 ```reason
 [@pancake]
-type address = {
-    street: string,
-    houseNo: int,
-    currentlyLivesHere: bool
-}
+type blog = {
+  id: int,
+  title: string,
+  body: option(string),
+};
+
+```
+Pancake will now generate all the needed lenses for the blog. So you can do
+things like:
+```reason
+let blog = {id: 0, title: "title", body: Some("body")};
+
+Lens.view(blogIdLens, blog); 
+// -> 0
+Lens.view(blogTitleLens, blog); 
+// -> "title"
+
+Lens.set(blogIdLens, 1, blog) 
+// -> {id: 1, title: "title", body: Some("body")}
+```
+
+Pancake also gives you some Helper functions for dealing with `lists`, `options`,
+`arrays`, and `results`. So you can do things like:
+
+#### Array / List
+*Lists and Arrays have pretty much the same syntax*
+```reason
+[@pancake]
+type metric = {speed: array(int)};
+
+let metric = {speed: [|0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10|]};
+
+Lens.view(metricSpeedLens >>- Lens.Array.atOrElse(1, 100), metric) 
+// -> 0
+Lens.view(metricSpeedLens >>- Lens.Array.atOrElse(-1, 100), metric) 
+// -> 10
+Lens.view(metricSpeedLens >>- Lens.Array.atOrElse(25, 100), metric) 
+// -> 100
+// being out of bounds returns the fallback
+
+Lens.set(metricSpeedLens >>- Lens.Array.atOrElse(1, 100), 100, metric)
+// -> {speed: [|0, 100, 2, 3, 4, 5, 6, 7, 8, 9, 10|]}
+Lens.set(metricSpeedLens >>- Lens.Array.atOrElse(-1, 100), 100, metric)
+// -> {speed: [|0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 100|]}
+Lens.set(metricSpeedLens >>- Lens.Array.atOrElse(25, 100), 100, metric)
+// -> {speed: [|0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 100|]} 
+// being out of bounds keeps the original array intact
+```
+
+#### Option
+```reason
+[@pancake]
+type metric = {speed: option(int)};
+let metric = {speed: Some(10)};
+
+Lens.view(metricSpeedLens >>- Lens.Option.orElse(1000), metric)
+// -> 10
+let metric = {speed: None};
+Lens.view(metricSpeedLens >>- Lens.Option.orElse(1000), metric)
+// -> 1000
+```
+
+```reason
+[@pancake]
+type metric = {speed: result(int, string)};
+let metric = {speed: Ok(10)};
+
+Lens.view(metricSpeedLens >>- Lens.Result.orElse(1000), metric)
+// -> 10
+let metric = {speed: Error("Some Error")};
+Lens.view(metricSpeedLens >>- Lens.Result.orElse(1000), metric)
+// -> 1000
+```
+
+#### All the way...
+Given some of the above elements, and the nesting of these lenses, it will give
+you the ability to do some pretty powerfull stuff...
+
+```reason
+[@pancake]
+type address = {country: option(string)};
 
 [@pancake]
-type user = {
-    username: string,
-    address
-}
+type company = {parsedAddress: result(address, string)};
+
+[@pancake]
+type account = {company: option(company)};
+
+let emptyAccount = {company: None};
+
+Lens.set(
+  accountCompanyLens
+  >>- Lens.Option.orElse({parsedAddress: Error("No Parsed Address")})
+  >>- companyParsedAddressLens
+  >>- Lens.Result.orElse({country: None})
+  >>- addressCountryLens
+  >>- Lens.Option.orElse("Some Fallback Country"),
+  "Netherlands",
+  accountThree,
+);
+// -> {company: Some({parsedAddress: Ok({country: Some("Netherlands")})})}
 ```
 
-Now Pancake will generate the following lenses for you:
-```reason
-let addressStreetLens = {
-  get: address => address.street,
-  set: (street, address) => {...address, street}
-}
-let addressHouseNoLens = {
-  get: address => address.houseNo,
-  set: (street, houseNo) => {...address, houseNo}
-}
-let addressCurrentlyLivesHereLens = {
-  get: address => address.currentlyLivesHere,
-  set: (street, currentlyLivesHere) => {...address, currentlyLivesHere}
-}
-let userUsernameLens = {
-  get: user => user.username,
-  set: (username, user) => {...user, username}
-}
-let userAddressLens = {
-  get: user => user.address,
-  set: (address, user) => {...user, address}
-}
-```
-
-Let's say that given a user, I want to be able to view and update his / her address;
-```reason
-let userAddressStreetLens = Pancake.pipe(userAddressLens, userStreetLens)
-
-```
-
-Or, with infix notation:
-```reason
-open Pancake.Infix;
-let userAddressStreetLens = userAddressLens >>- userStreetLens
-```
-
-Now, there are three main helper functions we can use to to some things.
-Given the following user:
-```reason
-let rolandsAddress = {
-  street: "Some Street",
-  houseNo: 42,
-  currentlyLivesHere: false,
-}
-let roland = {
-  username: "roland",
-  address: rolandsAddress
-};
-```
-
-1. View the users street
-```reason
-let rolandsStreet = Pancake.view(userAddressStreetLens, roland);
-// "Some Street"
-```
-
-2. Set the street
-```reason
-let rolandWithNewStreet = Pancake.set(userAddressStreetLens, "My new street", roland);
-// {username: "roland", address: {street: "My new street", houseNo: 42, currentlyLivesHere: false} 
-```
-Note that this returns a whole new user, with the new street applied.
-
-3. Run functions over that adder
-```reason
-let rolandWithNewStreet = Pancake.over(userAddressStreetLens, Js.String.toUpperCase, roland);
-// {username: "roland", address: {street: "MY NEW STREET", houseNo: 42, currentlyLivesHere: false} 
-```
-
-The great thing here is that both `set` and `over` return entirely new objects. So I can
-do things like:
-
-```reason
-roland
-|> Pancake.over(usernameLens, Js.String.toUpperCase)
-|> Pancake.set(userAddressStreetLens, "My New Street")
-|> Pancake.set(userAddressHouseNoLens, 55)
-|> Pancake.over(userCurrentlyLivesHereLens, (liveshere) => true)
-
-// {username: "ROLAND", address: {street: "My new street", houseNo: 42, currentlyLivesHere: true} 
-```
-Of course, at this point we're pretty much overwriting the whole address, so we 
-might opt for another solution. But imagine this is a deeply nested state, in
-which you'd have to update things in multiple locations, possibly with the same
-data, all in an immutable way...
-
+For more examples, check the tests.
 
 # Todo:
 

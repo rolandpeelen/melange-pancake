@@ -7,7 +7,9 @@
     "clean": "rm -rf lib && bsb -clean-world && rm -rf ppx_src/_esy",
     "build-ppx": "cd ppx_src && esy",
     "watch-ppx": "cd ppx_src && esy dune build -w",
-    "postinstall": "node postinstall.js"
+    "postinstall": "node postinstall.js",
+    "test": "jest --coverage",
+    "tdd": "jest --watchAll"
   },
   "files": [
     "/bsconfig.json",
@@ -21,6 +23,7 @@
     "/ppx-windows.exe"
   ],
   "dependencies": {
+    "@glennsl/bs-jest": "^0.7.0",
     "bs-platform": "^8.4.2"
   }
 }
