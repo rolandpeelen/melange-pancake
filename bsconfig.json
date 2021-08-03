@@ -4,6 +4,10 @@
     {
       "dir": "src",
       "public": ["Pancake", "Pancake__Lens", "Pancake__Prism"]
+    },
+    {
+      "dir": "__tests__",
+      "type": "dev"
     }
   ],
   "package-specs": [
@@ -14,6 +18,7 @@
   ],
   "ppx-flags": ["./ppx"],
   "refmt": 3,
+  "bs-dev-dependencies": ["@glennsl/bs-jest"],
   "warnings": {
     "number": "+A-9-40-42-102"
   },
