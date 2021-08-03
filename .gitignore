@@ -8,6 +8,7 @@ _release
 *.native
 *.install
 *.bs.js
+*.js
 lib
 ppx_src/esy.lock/
 ppx_src/_esy
