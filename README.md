@@ -109,6 +109,35 @@ Lens.view(metricSpeedLens >>- Lens.Result.orElse(1000), metric)
 // -> 1000
 ```
 
+#### All the way...
+Given some of the above elements, and the nesting of these lenses, it will give
+you the ability to do some pretty powerfull stuff...
+
+```reason
+[@pancake]
+type address = {country: option(string)};
+
+[@pancake]
+type company = {parsedAddress: result(address, string)};
+
+[@pancake]
+type account = {company: option(company)};
+
+let emptyAccount = {company: None};
+
+Lens.set(
+  accountCompanyLens
+  >>- Lens.Option.orElse({parsedAddress: Error("No Parsed Address")})
+  >>- companyParsedAddressLens
+  >>- Lens.Result.orElse({country: None})
+  >>- addressCountryLens
+  >>- Lens.Option.orElse("Some Fallback Country"),
+  "Netherlands",
+  accountThree,
+);
+// -> {company: Some({parsedAddress: Ok({country: Some("Netherlands")})})}
+```
+
 For more examples, check the tests.
 
 # Todo:
