@@ -37,12 +37,12 @@ module Array = {
   };
 
   /* Clones the full array when setting, no mutation returns the original
-     array when setting out of bounds Belt.Array.set is a mutating operation.
-     We want a new array.  Belt.Array.Copy uses splice under the hood, which
-     is O(n), so mapping over the array and replacing the item at index i is
-     just as fast, and infintely more clear than creating intermediate
-     variables. Wraps around when using negative values.
-  */
+        array when setting out of bounds Belt.Array.set is a mutating operation.
+        We want a new array.  Belt.Array.Copy uses splice under the hood, which
+        is O(n), so mapping over the array and replacing the item at index i is
+        just as fast, and infintely more clear than creating intermediate
+        variables. Wraps around when using negative values.
+     */
   let atOrElse = (i: int, default): t(array('a), 'a) => {
     get: (xs: array('a)) => {
       (
@@ -74,14 +74,16 @@ module List = {
        (listLength + i) as i is a negative number (listLength - (-1))
        and we would be out of bounds otherwise
        */
-    let listLength = Belt.List.length(xs);
     let (h, t) =
       i > 0
         ? (Belt.List.take(xs, i), Belt.List.drop(xs, i + 1))
-        : (
-          Belt.List.take(xs, listLength + i),
-          Belt.List.drop(xs, listLength + i + 1),
-        );
+        : {
+          let listLength = Belt.List.length(xs);
+          (
+            Belt.List.take(xs, listLength + i),
+            Belt.List.drop(xs, listLength + i + 1),
+          );
+        };
 
     switch (h, t) {
     | (Some(h), Some(t)) => Belt.List.concatMany([|h, [x], t|])
