@@ -28,31 +28,17 @@ module Array = {
 };
 
 module List = {
-  let updateAtIndex = (xs, i, x) => {
-    /* Instead of mapping like we do with the array,
-       we splice the linked list and re-connect them with the element
-       in the middle.
-       If 'i' < 0 -- we wrap around. Not that we do this with:
+  let updateAtIndex = (xs, i, e) => {
+    /* If 'i' < 0 -- we wrap around. Note that we do this with:
        (listLength + i) as i is a negative number (listLength - (-1))
-       and we would be out of bounds otherwise
+       and we would be out of bounds otherwise.
        */
-    let (h, t) =
-      i > 0
-        ? (Belt.List.take(xs, i), Belt.List.drop(xs, i + 1))
-        : {
-          let listLength = Belt.List.length(xs);
-          (
-            Belt.List.take(xs, listLength + i),
-            Belt.List.drop(xs, listLength + i + 1),
-          );
-        };
-
-    switch (h, t) {
-    | (Some(h), Some(t)) => Belt.List.concatMany([|h, [x], t|])
-    | (None, Some(t)) => Belt.List.concatMany([|[x], t|])
-    | (Some(h), None) => Belt.List.concatMany([|h, [x]|])
-    | (None, None) => xs
-    };
+    i > 0
+      ? Belt.List.mapWithIndex(xs, (j, x) => i === j ? e : x)
+      : {
+        let actualI = Belt.List.length(xs) + i;
+        Belt.List.mapWithIndex(xs, (j, x) => actualI === j ? e : x);
+      };
   };
 
   let rec findBy = fn =>
@@ -61,11 +47,7 @@ module List = {
     | [x, ..._] when fn(x) => Some(x)
     | [_, ...xs] => findBy(fn, xs);
 
-  let rec replaceBy = (e, fn) =>
-    fun
-    | [] => []
-    | [x, ...xs] when fn(x) => [e, ...xs]
-    | [x, ...xs] => [x, ...replaceBy(e, fn, xs)];
+  let replaceBy = (e, fn, xs) => Belt.List.map(xs, x => fn(x) ? e : x);
 };
 
 module Option = {
