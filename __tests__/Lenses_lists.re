@@ -109,3 +109,79 @@ describe("Lens List atOrExn", () => {
     |> const,
   );
 });
+
+describe("Lens List find", () => {
+  test(
+    "Expect correct update when found",
+    Lens.set(metricSpeedLens >>- Lens.List.find(5), Some(200), metric)
+    |> expect
+    |> toEqual({speed: [0, 1, 2, 3, 4, 200, 6, 7, 8, 9, 10]})
+    |> const,
+  );
+
+  test(
+    "Expect correct update of value when found, composed through orExn",
+    Lens.set(
+      metricSpeedLens >>- Lens.List.find(5) >>- Lens.Option.orExn,
+      200,
+      metric,
+    )
+    |> expect
+    |> toEqual({speed: [0, 1, 2, 3, 4, 200, 6, 7, 8, 9, 10]})
+    |> const,
+  );
+
+  test(
+    "Expect correct value when value is found",
+    Lens.view(metricSpeedLens >>- Lens.List.find(5), metric)
+    |> expect
+    |> toEqual(Some(5))
+    |> const,
+  );
+
+  test(
+    "Expect None when value isn't found",
+    Lens.view(metricSpeedLens >>- Lens.List.find(200), metric)
+    |> expect
+    |> toEqual(None)
+    |> const,
+  );
+});
+
+[@pancake]
+type user = {
+  id: int,
+  username: string,
+};
+let users = [
+  {id: 0, username: "0"},
+  {id: 1, username: "1"},
+  {id: 2, username: "2"},
+  {id: 3, username: "3"},
+];
+
+describe("Lens List findByLens", () => {
+  test(
+    "Expect to find user when user is correct",
+    Lens.view(Lens.List.findByLens("0", userUsernameLens), users)
+    |> expect
+    |> toEqual(Some({id: 0, username: "0"}))
+    |> const,
+  );
+
+  test(
+    "Expect to find user when id is correct",
+    Lens.view(Lens.List.findByLens(0, userIdLens), users)
+    |> expect
+    |> toEqual(Some({id: 0, username: "0"}))
+    |> const,
+  );
+
+  test(
+    "Expect not to find user when id is correct",
+    Lens.view(Lens.List.findByLens(25, userIdLens), users)
+    |> expect
+    |> toEqual(None)
+    |> const,
+  );
+});
