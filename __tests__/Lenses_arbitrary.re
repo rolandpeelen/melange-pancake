@@ -1,7 +1,5 @@
-open Function;
 open Jest;
 open Expect;
-
 open Pancake;
 open Pancake.Lens.Infix;
 
@@ -34,7 +32,7 @@ test(
   )
   |> expect
   |> toEqual("Netherlands")
-  |> const,
+  |> Lib.Function.const,
 );
 
 /* ---------------------------- */
@@ -54,7 +52,7 @@ test(
   )
   |> expect
   |> toEqual("Some Fallback Country")
-  |> const,
+  |> Lib.Function.const,
 );
 test(
   "AccountOne Set",
@@ -70,7 +68,7 @@ test(
   )
   |> expect
   |> toEqual(accountAll)
-  |> const,
+  |> Lib.Function.const,
 );
 
 /* ---------------------------- */
@@ -93,7 +91,7 @@ test(
   )
   |> expect
   |> toEqual("Some Fallback Country")
-  |> const,
+  |> Lib.Function.const,
 );
 
 test(
@@ -110,7 +108,7 @@ test(
   )
   |> expect
   |> toEqual(accountAll)
-  |> const,
+  |> Lib.Function.const,
 );
 
 /* ---------------------------- */
@@ -131,7 +129,7 @@ test(
   )
   |> expect
   |> toEqual("Some Fallback Country")
-  |> const,
+  |> Lib.Function.const,
 );
 
 test(
@@ -148,5 +146,48 @@ test(
   )
   |> expect
   |> toEqual(accountAll)
-  |> const,
+  |> Lib.Function.const,
+);
+
+[@pancake]
+type userAccount = {
+  id: int,
+  company: option(company),
+};
+
+let input = [
+  {id: 0, company: None},
+  {
+    id: 1,
+    company: Some({parsedAddress: Ok({country: Some("Netherlands")})}),
+  },
+  {id: 2, company: None},
+];
+
+let output = [
+  {id: 0, company: None},
+  {
+    id: 1,
+    company: Some({parsedAddress: Ok({country: Some("NETHERLANDS")})}),
+  },
+  {id: 2, company: None},
+];
+
+test(
+  "Account deeply nested",
+  Lens.over(
+    Lens.List.findByLens(1, userAccountIdLens)
+    >>- Lens.Option.orElse({id: (-1), company: None})
+    >>- userAccountCompanyLens
+    >>- Lens.Option.orElse({parsedAddress: Error("No Parsed Address")})
+    >>- companyParsedAddressLens
+    >>- Lens.Result.orElse({country: None})
+    >>- addressCountryLens
+    >>- Lens.Option.orElse("Fallback Country"),
+    Js.String.toUpperCase,
+    input,
+  )
+  |> expect
+  |> toEqual(output)
+  |> Lib.Function.const,
 );

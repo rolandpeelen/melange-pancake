@@ -1,7 +1,5 @@
-open Function;
 open Jest;
 open Expect;
-
 open Pancake;
 open Pancake.Lens.Infix;
 
@@ -16,7 +14,7 @@ describe("Lens Array orElse", () => {
     Lens.view(metricSpeedLens >>- Lens.Result.orElse(1000), metric)
     |> expect
     |> toEqual(10)
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -27,7 +25,7 @@ describe("Lens Array orElse", () => {
     )
     |> expect
     |> toEqual(1000)
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -35,7 +33,7 @@ describe("Lens Array orElse", () => {
     Lens.set(metricSpeedLens >>- Lens.Result.orElse(1000), 10, metric)
     |> expect
     |> toEqual({speed: Ok(10)})
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -47,7 +45,7 @@ describe("Lens Array orElse", () => {
     )
     |> expect
     |> toEqual({speed: Ok(10)})
-    |> const,
+    |> Lib.Function.const,
   );
 });
 
@@ -57,7 +55,7 @@ describe("Lens Array orExn", () => {
     Lens.view(metricSpeedLens >>- Lens.Result.orExn, metric)
     |> expect
     |> toEqual(10)
-    |> const,
+    |> Lib.Function.const,
   );
 
   // TODO - fix using toThrow ?
@@ -78,7 +76,7 @@ describe("Lens Array orExn", () => {
     Lens.set(metricSpeedLens >>- Lens.Result.orExn, 10, metric)
     |> expect
     |> toEqual({speed: Ok(10)})
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -90,6 +88,6 @@ describe("Lens Array orExn", () => {
     )
     |> expect
     |> toEqual({speed: Ok(10)})
-    |> const,
+    |> Lib.Function.const,
   );
 });
