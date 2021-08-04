@@ -1,3 +1,17 @@
+module Function = {
+  let compose = (f, g, x) => f(g(x));
+  let pipe = (f, g, x) => g(f(x));
+  let id = x => x;
+  let const = (x, _) => x;
+
+  let flip: 'a 'b 'c. (('a, 'b) => 'c, 'b, 'a) => 'c = (f, b, a) => f(a, b);
+
+  module Infix = {
+    let (>>) = pipe;
+    let (<<) = compose;
+  };
+};
+
 module Array = {
   let updateAtIndexUnsafe = (xs, i, x) =>
     Belt.Array.mapWithIndex(xs, (idx, y) => idx === i ? x : y);
@@ -52,4 +66,12 @@ module List = {
     | [] => []
     | [x, ...xs] when fn(x) => [e, ...xs]
     | [x, ...xs] => [x, ...replaceBy(e, fn, xs)];
+};
+
+module Option = {
+  let getOrElse = (x, o) => Belt.Option.getWithDefault(o, x);
+};
+
+module Result = {
+  let getOrElse = (x, o) => Belt.Result.getWithDefault(o, x);
 };

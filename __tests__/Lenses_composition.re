@@ -1,7 +1,5 @@
-open Function;
 open Jest;
 open Expect;
-
 open Pancake;
 open Pancake.Lens.Infix;
 
@@ -30,7 +28,7 @@ module View = {
       Lens.view(authorNameLens -<< Lens.Option.orExn -<< blogAuthorLens, blog)
       |> expect
       |> toEqual("Roland")
-      |> const,
+      |> Lib.Function.const,
     );
 
     let fallbackAuthor = {id: 0, name: "No Author", email: None};
@@ -44,7 +42,7 @@ module View = {
       )
       |> expect
       |> toEqual("No Author")
-      |> const,
+      |> Lib.Function.const,
     );
   });
 };
@@ -59,7 +57,7 @@ module Set = {
       )
       |> expect
       |> toEqual({...blog, author: Some({...author, name: "New Author"})})
-      |> const,
+      |> Lib.Function.const,
     );
 
     test(
@@ -77,7 +75,7 @@ module Set = {
            ...blog,
            author: Some({...author, email: Some("email")}),
          })
-      |> const,
+      |> Lib.Function.const,
     );
   });
 };
@@ -92,7 +90,7 @@ module Over = {
       )
       |> expect
       |> toEqual({...blog, author: Some({...author, name: "ROLAND"})})
-      |> const,
+      |> Lib.Function.const,
     );
 
     test(
@@ -110,7 +108,7 @@ module Over = {
            ...blog,
            author: Some({...author, email: Some("EMAIL")}),
          })
-      |> const,
+      |> Lib.Function.const,
     );
   });
 };

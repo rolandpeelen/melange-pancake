@@ -44,7 +44,7 @@ module Infix = {
 };
 
 module Option = {
-  let some: t('a, 's) = {up: Function.id, down: x => Some(x)};
+  let some: t('a, 's) = {up: Lib.Function.id, down: x => Some(x)};
 };
 
 module Result = {

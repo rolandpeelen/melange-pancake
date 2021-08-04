@@ -1,7 +1,5 @@
-open Function;
 open Jest;
 open Expect;
-
 open Pancake;
 
 [@pancake]
@@ -17,18 +15,24 @@ module View = {
   describe("Lens.view", () => {
     test(
       "id",
-      Lens.view(blogIdLens, blog) |> expect |> toEqual(0) |> const,
+      Lens.view(blogIdLens, blog)
+      |> expect
+      |> toEqual(0)
+      |> Lib.Function.const,
     );
     test(
       "title",
-      Lens.view(blogTitleLens, blog) |> expect |> toEqual("title") |> const,
+      Lens.view(blogTitleLens, blog)
+      |> expect
+      |> toEqual("title")
+      |> Lib.Function.const,
     );
     test(
       "body",
       Lens.view(blogBodyLens, blog)
       |> expect
       |> toEqual(Some("body"))
-      |> const,
+      |> Lib.Function.const,
     );
   });
 };
@@ -39,21 +43,21 @@ module Set = {
       Lens.set(blogIdLens, 1, blog)
       |> expect
       |> toEqual({...blog, id: 1})
-      |> const,
+      |> Lib.Function.const,
     );
     test(
       "title",
       Lens.set(blogTitleLens, "newTitle", blog)
       |> expect
       |> toEqual({...blog, title: "newTitle"})
-      |> const,
+      |> Lib.Function.const,
     );
     test(
       "body",
       Lens.set(blogBodyLens, None, blog)
       |> expect
       |> toEqual({...blog, body: None})
-      |> const,
+      |> Lib.Function.const,
     );
   });
 };
@@ -64,14 +68,14 @@ module Over = {
       Lens.over(blogIdLens, x => x + 1, blog)
       |> expect
       |> toEqual({...blog, id: 1})
-      |> const,
+      |> Lib.Function.const,
     );
     test(
       "title",
       Lens.over(blogTitleLens, Js.String.toUpperCase, blog)
       |> expect
       |> toEqual({...blog, title: "TITLE"})
-      |> const,
+      |> Lib.Function.const,
     );
     test(
       "body",
@@ -82,7 +86,7 @@ module Over = {
       )
       |> expect
       |> toEqual({...blog, body: Some("BODY")})
-      |> const,
+      |> Lib.Function.const,
     );
   });
 };

@@ -1,7 +1,5 @@
-open Function;
 open Jest;
 open Expect;
-
 open Pancake;
 open Pancake.Lens.Infix;
 
@@ -16,7 +14,7 @@ describe("Lens Array atOrElse", () => {
     Lens.view(metricSpeedLens >>- Lens.Array.atOrElse(1, 100), metric)
     |> expect
     |> toEqual(1)
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -24,7 +22,7 @@ describe("Lens Array atOrElse", () => {
     Lens.view(metricSpeedLens >>- Lens.Array.atOrElse(25, 100), metric)
     |> expect
     |> toEqual(100)
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -32,7 +30,7 @@ describe("Lens Array atOrElse", () => {
     Lens.view(metricSpeedLens >>- Lens.Array.atOrElse(-1, 100), metric)
     |> expect
     |> toEqual(10)
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -40,7 +38,7 @@ describe("Lens Array atOrElse", () => {
     Lens.set(metricSpeedLens >>- Lens.Array.atOrElse(1, 100), 100, metric)
     |> expect
     |> toEqual({speed: [|0, 100, 2, 3, 4, 5, 6, 7, 8, 9, 10|]})
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -48,7 +46,7 @@ describe("Lens Array atOrElse", () => {
     Lens.set(metricSpeedLens >>- Lens.Array.atOrElse(25, 100), 100, metric)
     |> expect
     |> toEqual({speed: [|0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10|]})
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -56,7 +54,7 @@ describe("Lens Array atOrElse", () => {
     Lens.set(metricSpeedLens >>- Lens.Array.atOrElse(-1, 100), 100, metric)
     |> expect
     |> toEqual({speed: [|0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 100|]})
-    |> const,
+    |> Lib.Function.const,
   );
 });
 
@@ -66,7 +64,7 @@ describe("Lens Array atOrExn", () => {
     Lens.view(metricSpeedLens >>- Lens.Array.atOrExn(1), metric)
     |> expect
     |> toEqual(1)
-    |> const,
+    |> Lib.Function.const,
   );
 
   // TODO - fix using toThrow ?
@@ -83,7 +81,7 @@ describe("Lens Array atOrExn", () => {
     Lens.view(metricSpeedLens >>- Lens.Array.atOrExn(-1), metric)
     |> expect
     |> toEqual(10)
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -91,7 +89,7 @@ describe("Lens Array atOrExn", () => {
     Lens.set(metricSpeedLens >>- Lens.Array.atOrExn(1), 100, metric)
     |> expect
     |> toEqual({speed: [|0, 100, 2, 3, 4, 5, 6, 7, 8, 9, 10|]})
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -99,7 +97,7 @@ describe("Lens Array atOrExn", () => {
     Lens.set(metricSpeedLens >>- Lens.Array.atOrExn(25), 100, metric)
     |> expect
     |> toEqual({speed: [|0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10|]})
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -107,7 +105,7 @@ describe("Lens Array atOrExn", () => {
     Lens.set(metricSpeedLens >>- Lens.Array.atOrExn(-1), 100, metric)
     |> expect
     |> toEqual({speed: [|0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 100|]})
-    |> const,
+    |> Lib.Function.const,
   );
 });
 
@@ -117,7 +115,7 @@ describe("Lens Array find", () => {
     Lens.set(metricSpeedLens >>- Lens.Array.find(5), Some(200), metric)
     |> expect
     |> toEqual({speed: [|0, 1, 2, 3, 4, 200, 6, 7, 8, 9, 10|]})
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -129,7 +127,7 @@ describe("Lens Array find", () => {
     )
     |> expect
     |> toEqual({speed: [|0, 1, 2, 3, 4, 200, 6, 7, 8, 9, 10|]})
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -137,7 +135,7 @@ describe("Lens Array find", () => {
     Lens.view(metricSpeedLens >>- Lens.Array.find(5), metric)
     |> expect
     |> toEqual(Some(5))
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -145,7 +143,7 @@ describe("Lens Array find", () => {
     Lens.view(metricSpeedLens >>- Lens.Array.find(200), metric)
     |> expect
     |> toEqual(None)
-    |> const,
+    |> Lib.Function.const,
   );
 });
 
@@ -167,7 +165,7 @@ describe("Lens Array findByLens", () => {
     Lens.view(Lens.Array.findByLens("0", userUsernameLens), users)
     |> expect
     |> toEqual(Some({id: 0, username: "0"}))
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -175,7 +173,7 @@ describe("Lens Array findByLens", () => {
     Lens.view(Lens.Array.findByLens(0, userIdLens), users)
     |> expect
     |> toEqual(Some({id: 0, username: "0"}))
-    |> const,
+    |> Lib.Function.const,
   );
 
   test(
@@ -183,6 +181,6 @@ describe("Lens Array findByLens", () => {
     Lens.view(Lens.Array.findByLens(25, userIdLens), users)
     |> expect
     |> toEqual(None)
-    |> const,
+    |> Lib.Function.const,
   );
 });
