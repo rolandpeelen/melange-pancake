@@ -1,4 +1,4 @@
-open Function.Infix;
+open Lib.Function.Infix;
 
 type t('a, 'b) = {
   get: 'a => 'b,
@@ -24,7 +24,7 @@ module Infix = {
 
 module Option = {
   let orElse = (default: 'b): t('a, 'b) => {
-    get: default |> Function.flip(Belt.Option.getWithDefault),
+    get: Lib.Option.getOrElse(default),
     set: (x, _) => Some(x),
   };
 
@@ -33,7 +33,7 @@ module Option = {
 
 module Result = {
   let orElse = (default: 'b): t('a, 'b) => {
-    get: default |> (Belt.Result.getWithDefault |> Function.flip),
+    get: Lib.Result.getOrElse(default),
     set: (x, _) => Ok(x),
   };
 

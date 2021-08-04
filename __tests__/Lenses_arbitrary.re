@@ -1,7 +1,5 @@
-open Function;
 open Jest;
 open Expect;
-
 open Pancake;
 open Pancake.Lens.Infix;
 
@@ -34,7 +32,7 @@ test(
   )
   |> expect
   |> toEqual("Netherlands")
-  |> const,
+  |> Lib.Function.const,
 );
 
 /* ---------------------------- */
@@ -54,7 +52,7 @@ test(
   )
   |> expect
   |> toEqual("Some Fallback Country")
-  |> const,
+  |> Lib.Function.const,
 );
 test(
   "AccountOne Set",
@@ -70,7 +68,7 @@ test(
   )
   |> expect
   |> toEqual(accountAll)
-  |> const,
+  |> Lib.Function.const,
 );
 
 /* ---------------------------- */
@@ -93,7 +91,7 @@ test(
   )
   |> expect
   |> toEqual("Some Fallback Country")
-  |> const,
+  |> Lib.Function.const,
 );
 
 test(
@@ -110,7 +108,7 @@ test(
   )
   |> expect
   |> toEqual(accountAll)
-  |> const,
+  |> Lib.Function.const,
 );
 
 /* ---------------------------- */
@@ -131,7 +129,7 @@ test(
   )
   |> expect
   |> toEqual("Some Fallback Country")
-  |> const,
+  |> Lib.Function.const,
 );
 
 test(
@@ -148,7 +146,7 @@ test(
   )
   |> expect
   |> toEqual(accountAll)
-  |> const,
+  |> Lib.Function.const,
 );
 
 [@pancake]
@@ -191,5 +189,5 @@ test(
   )
   |> expect
   |> toEqual(output)
-  |> const,
+  |> Lib.Function.const,
 );
