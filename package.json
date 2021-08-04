@@ -23,7 +23,9 @@
     "/ppx-windows.exe"
   ],
   "dependencies": {
-    "@glennsl/bs-jest": "^0.7.0",
     "bs-platform": "^8.4.2"
+  },
+  "devDependencies": {
+    "@glennsl/bs-jest": "^0.7.0"
   }
 }
