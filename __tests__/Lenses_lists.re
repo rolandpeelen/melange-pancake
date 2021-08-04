@@ -110,6 +110,19 @@ describe("Lens List atOrExn", () => {
 
 describe("Lens List find", () => {
   test(
+    "Work on big lists",
+    Lens.set(
+      Lens.List.find(9999999),
+      Some(0),
+      Belt.List.makeBy(10000000, Lib.Function.id),
+    )
+    ->Belt.List.get(9999999)
+    |> expect
+    |> toEqual(Some(0))
+    |> Lib.Function.const,
+  );
+
+  test(
     "Expect correct update when found",
     Lens.set(metricSpeedLens >>- Lens.List.find(5), Some(200), metric)
     |> expect
