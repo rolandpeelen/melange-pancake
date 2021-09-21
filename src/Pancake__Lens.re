@@ -11,11 +11,12 @@ let set = (lens: t('a, 'b), value: 'b, state: 'a): 'a =>
 let over = (lens: t('a, 'b), fn: 'b => 'b, state: 'a): 'a =>
   lens.set(lens.get(state) |> fn, state);
 
-let compose = (l0: t('b, 'c), l1: t('a, 'b)): t('a, 'c) => {
-  get: l1.get >> l0.get,
-  set: l0.set >> over(l1),
+let pipe = (l0: t('a, 'b), l1: t('b, 'c)): t('a, 'c) => {
+  get: l0.get >> l1.get,
+  set: l1.set >> over(l0),
 };
-let pipe = (l0, l1) => compose(l1, l0);
+
+let compose = (l0, l1) => pipe(l1, l0);
 
 module Infix = {
   let (-<<) = compose;
