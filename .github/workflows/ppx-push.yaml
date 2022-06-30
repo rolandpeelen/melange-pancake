@@ -61,7 +61,7 @@ jobs:
         run: |
           mv ubuntu-latest/bin.exe ./ppx-linux.exe
           mv macos-latest/bin.exe ./ppx-osx.exe
-          mv windows-latest/default/bin/bin.exe ./ppx-windows.exe
+          mv windows-latest/*/default/bin/bin.exe ./ppx-windows.exe
 
       - uses: actions/setup-node@v1
         with:
