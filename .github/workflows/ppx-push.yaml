@@ -13,9 +13,12 @@ jobs:
         with:
           access_token: ${{ github.token }}
 
-  build-osx:
-    name: Build OSX PPX
-    runs-on: macos-latest
+  build:
+    name: PPX Build Matrix
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
       with:
@@ -24,30 +27,19 @@ jobs:
       run: yarn global add esy
     - name: Run Build
       run: yarn build-ppx
-    - name: Upload Build
+    - name: Upload Build Mac / Linux
+      if: ${{ matrix.os != 'windows-latest' }} 
       uses: actions/upload-artifact@v2
       with:
-        name: macos-ppx
+        name: ${{ matrix.os }}
         path: ppx_src/_esy/default/build/default/bin/bin.exe 
         retention-days: 1
-
-  build-linux:
-    name: Build Linux PPX
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        ref: ${{ github.ref }}
-    - name: Install esy
-      run: yarn global add esy
-    - name: Run Build
-      run: yarn build-ppx
-    - name: Upload Build
+    - name: Upload Build Windows
+      if: ${{ matrix.os == 'windows-latest' }} 
       uses: actions/upload-artifact@v2
       with:
-        name: linux-ppx
-        path: ppx_src/_esy/default/build/default/bin/bin.exe 
+        name: ${{ matrix.os }}
+        path: ppx_src/_esy/default/store/b/*/default/bin/bin.exe 
         retention-days: 1
 
   npm-release:
@@ -55,8 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.action == 'published'
     needs: 
-      - build-osx 
-      - build-linux 
+      - build
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -68,8 +59,9 @@ jobs:
 
       - name: Move / Rename Artifacts
         run: |
-          mv linux-ppx/bin.exe ./ppx-linux.exe
-          mv macos-ppx/bin.exe ./ppx-osx.exe
+          mv linux-latest/bin.exe ./ppx-linux.exe
+          mv macos-latest/bin.exe ./ppx-osx.exe
+          mv windows-latest/bin.exe ./ppx-windows.exe
 
       - uses: actions/setup-node@v1
         with:
