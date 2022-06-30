@@ -59,7 +59,7 @@ jobs:
 
       - name: Move / Rename Artifacts
         run: |
-          mv linux-latest/bin.exe ./ppx-linux.exe
+          mv ubuntu-latest/bin.exe ./ppx-linux.exe
           mv macos-latest/bin.exe ./ppx-osx.exe
           mv windows-latest/bin.exe ./ppx-windows.exe
 
