@@ -1,6 +1,6 @@
 {
   "name": "bs-pancake",
-  "version": "1.2.7",
+  "version": "1.3.0",
   "license" : "BSD-3-Clause",
   "scripts": {
     "start": "bsb -clean-world -make-world -w",
