@@ -18,6 +18,9 @@ let pipe = (l0: t('a, 'b), l1: t('b, 'c)): t('a, 'c) => {
 
 let compose = (l0, l1) => pipe(l1, l0);
 
+let effect = (lens: t('a, 'b), fn: 'b => unit, state: 'a): unit =>
+  lens.get(state) |> fn;
+
 module Infix = {
   let (-<<) = compose;
   let (>>-) = pipe;
