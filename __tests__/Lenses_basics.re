@@ -90,3 +90,14 @@ module Over = {
     );
   });
 };
+
+module Effect = {
+  describe("Lens.effect", () => {
+    let id = ref(None);
+    test("Effect works and acceps functions returning unit", () => {
+      Lens.effect(blogIdLens, x => id := Some(x), blog);
+
+      expect(id^) |> toEqual(Some(0));
+    });
+  });
+};
