@@ -5,10 +5,10 @@
     "release": { "bin": ["pancake"] }
   },
   "devDependencies": {
-    "@opam/reason": "^3.7.0",
+    "@opam/reason": "^3.8.1",
     "@opam/dune": ">=2.8.4",
     "@opam/ppxlib": "^0.26.0",
-    "ocaml": "4.12.x",
+    "ocaml": "4.14.x",
     "@opam/ocaml-lsp-server": "*"
   }
 }
