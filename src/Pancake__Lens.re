@@ -59,7 +59,7 @@ module Array = {
           ? Belt.Array.get(xs, Belt.Array.length(xs) + i)
           : Belt.Array.get(xs, i)
       )
-      ->Belt.Option.getWithDefault(default);
+      |> Belt.Option.getWithDefault(_, default);
     },
     set: (x: 'a, xs: array('a)) => Lib.Array.updateAtIndex(xs, i, x),
   };
@@ -102,7 +102,7 @@ module List = {
           ? Belt.List.get(xs, Belt.List.length(xs) + i)
           : Belt.List.get(xs, i)
       )
-      ->Belt.Option.getWithDefault(default);
+      |>Belt.Option.getWithDefault(_, default);
     },
     set: (x: 'a, xs: list('a)) => Lib.List.updateAtIndex(xs, i, x),
   };

@@ -1,0 +1,8 @@
+(include_subdirs unqualified)
+(library
+ (modes melange)
+ (libraries melange-jest.jest)
+ (modules :standard)
+ (preprocess
+  (pps melange.ppx pancake.ppx))
+ (name tests))

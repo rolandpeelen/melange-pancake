@@ -1,6 +1,6 @@
 (library
-  (name pancake)
-  (public_name pancake)
+  (name pancake_ppx)
+  (public_name pancake.ppx)
   (kind ppx_rewriter)
   (libraries ppxlib)
   (preprocess

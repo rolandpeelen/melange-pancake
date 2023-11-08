@@ -1,0 +1,7 @@
+(include_subdirs unqualified)
+(library
+ (modes melange)
+ (modules :standard)
+ (preprocess
+  (pps melange.ppx pancake.ppx))
+ (name src))

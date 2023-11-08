@@ -3,11 +3,11 @@
   "version": "1.4.0",
   "license": "BSD-3-Clause",
   "scripts": {
-    "start": "bsb -clean-world -make-world -w",
-    "build-lib": "bsb -clean-world -make-world",
+    "start": "dune build -w",
+    "build-lib": "dune build",
     "clean": "rm -rf lib && bsb -clean-world && rm -rf ppx_src/_esy",
-    "build-ppx": "cd ppx_src && esy",
-    "watch-ppx": "cd ppx_src && esy dune build -w",
+    "build-ppx": "cd ppx_src && dune build",
+    "watch-ppx": "cd ppx_src && dune build -w",
     "postinstall": "node postinstall.js",
     "test": "jest --coverage",
     "tdd": "jest --watchAll"
@@ -23,10 +23,7 @@
     "/ppx-osx.exe",
     "/ppx-windows.exe"
   ],
-  "dependencies": {
-    "bs-platform": "^8.4.2"
-  },
   "devDependencies": {
-    "@glennsl/bs-jest": "^0.7.0"
+    "jest": "^26.5.2"
   }
 }

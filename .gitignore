@@ -10,7 +10,5 @@ _release
 *.bs.js
 *.js
 lib
-ppx_src/esy.lock/
-ppx_src/_esy
 ppx_src/_release
 ppx_src/node_modules
