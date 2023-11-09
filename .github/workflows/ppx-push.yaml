@@ -17,8 +17,8 @@ jobs:
     name: PPX Build Matrix
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-        ocaml-compiler: ["5.1"]
+        os: [macos-latest, ubuntu-latest]
+        ocaml-compiler: ["5.1.0"]
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -34,18 +34,10 @@ jobs:
     - name: Run Build
       run: make build
     - name: Upload Build Mac / Linux
-      if: ${{ matrix.os != 'windows-latest' }} 
       uses: actions/upload-artifact@v2
       with:
         name: ${{ matrix.os }}
-        path: ppx_src/_esy/default/build/default/bin/bin.exe 
-        retention-days: 1
-    - name: Upload Build Windows
-      if: ${{ matrix.os == 'windows-latest' }} 
-      uses: actions/upload-artifact@v2
-      with:
-        name: ${{ matrix.os }}
-        path: ppx_src/_esy/default/store/b/*/default/bin/bin.exe 
+        path: _build/default/ppx_src/bin/bin.exe
         retention-days: 1
 
   npm-release:
@@ -67,7 +59,6 @@ jobs:
         run: |
           mv ubuntu-latest/bin.exe ./ppx-linux.exe
           mv macos-latest/bin.exe ./ppx-osx.exe
-          mv windows-latest/*/default/bin/bin.exe ./ppx-windows.exe
 
       - uses: actions/setup-node@v1
         with:

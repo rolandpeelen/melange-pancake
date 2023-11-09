@@ -1,6 +1,6 @@
 {
   "name": "bs-pancake",
-  "version": "1.4.0",
+  "version": "2.0.1",
   "license": "BSD-3-Clause",
   "scripts": {
     "start": "dune build -w",
@@ -20,8 +20,7 @@
     "/ppx",
     "/ppx.cmd",
     "/ppx-linux.exe",
-    "/ppx-osx.exe",
-    "/ppx-windows.exe"
+    "/ppx-osx.exe"
   ],
   "devDependencies": {
     "jest": "^26.5.2"
