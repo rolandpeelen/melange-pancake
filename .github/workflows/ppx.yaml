@@ -9,13 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Install Esy
-      run: yarn global add esy
+    - uses: ocaml/setup-ocaml@v2
+      with:
+        ocaml-compiler: "5.1"
     - name: Install Dependencies
-      run: yarn
-    - name: Build PPX
-      run: yarn build-ppx
-    - name: Build Library
-      run: yarn build-lib
-    - name: Run tests
-      run: yarn test 
+      run: make install
+    - name: Build
+      run: make build
