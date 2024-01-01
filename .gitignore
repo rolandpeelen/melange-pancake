@@ -4,11 +4,10 @@ _esy
 node_modules
 _build
 _release
+_opam
 *.byte
 *.native
 *.install
 *.bs.js
-*.js
-lib
 ppx_src/_release
 ppx_src/node_modules

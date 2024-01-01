@@ -1,5 +1,0 @@
-(executable
- (package pancake)
- (name bin)
- (public_name pancake)
- (libraries pancake.ppx))

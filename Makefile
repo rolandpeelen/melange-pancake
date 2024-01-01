@@ -20,26 +20,22 @@ init: create-switch install ## Configure everything to develop this repository i
 
 .PHONY: install
 install: ## Install development dependencies
-	yarn install # install JavaScript packages that the project might depend on, like `react` or `react-dom`
-	opam update # make sure that opam has the latest information about published libraries in the opam repository https://opam.ocaml.org/packages/
-	opam install -y . --deps-only --with-test # install the Melange and OCaml dependencies
+	yarn
+	opam update
+	opam install -y . --deps-only --with-test
+
+.PHONY: test
+test: ## Run tests using yest
+	$(DUNE) build
+	yarn test
 
 .PHONY: build
 build: ## Build the project
 	$(DUNE) build
-  # Another way to build the project would be just calling `dune build`, which will build the `@@default` alias: https://dune.readthedocs.io/en/stable/reference/aliases.html#default
 
 .PHONY: build_verbose
 build_verbose: ## Build the project
 	$(DUNE) build --verbose
-
-.PHONY: serve
-serve: ## Serve the application with a local HTTP server
-	yarn run serve
-
-.PHONY: bundle
-bundle: ## Bundle the JavaScript application
-	yarn run bundle
 
 .PHONY: clean
 clean: ## Clean build artifacts and other generated files

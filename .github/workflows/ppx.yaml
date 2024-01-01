@@ -14,5 +14,5 @@ jobs:
         ocaml-compiler: "5.1.0"
     - name: Install Dependencies
       run: make install
-    - name: Build
-      run: make build
+    - name: Test
+      run: make test

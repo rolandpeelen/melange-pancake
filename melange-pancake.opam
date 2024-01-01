@@ -1,0 +1,34 @@
+opam-version: "1.0"
+version: "1.0"
+synopsis: "Melange Pancake"
+description: "A tiny lens library that works with Melange"
+maintainer: ["Roland Peelen"]
+authors: ["Roland Peelen"]
+dev-repo: "git+https://github.com/rolandpeelen/melange-pancake.git"
+license: "MIT"
+homepage: "https://github.com/rolandpeelen/melange-pancake"
+bug-reports: "https://github.com/rolandpeelen/melange-pancake/issues"
+depends: [
+  "ocaml"
+  "dune"
+  "melange" {>= "2.0.0"}
+  "reason" {>= "3.10.0"}
+  "ppxlib" {>= "0.31.0"}
+  "melange-jest" {with-test}
+  "ocaml-lsp-server" {with-test}
+  "odoc" {with-doc}
+]
+build: [
+  ["dune" "subst"] {dev}
+  [
+    "dune"
+    "build"
+    "-p"
+    name
+    "-j"
+    jobs
+    "@install"
+    "@runtest" {with-test}
+    "@doc" {with-doc}
+  ]
+]

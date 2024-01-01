@@ -1,27 +1,11 @@
 {
-  "name": "bs-pancake",
-  "version": "2.0.1",
+  "name": "melange-pancake",
+  "version": "1.0.0",
   "license": "BSD-3-Clause",
   "scripts": {
-    "start": "dune build -w",
-    "build-lib": "dune build",
-    "clean": "rm -rf lib && bsb -clean-world && rm -rf ppx_src/_esy",
-    "build-ppx": "cd ppx_src && dune build",
-    "watch-ppx": "cd ppx_src && dune build -w",
-    "postinstall": "node postinstall.js",
-    "test": "jest --coverage",
+    "test": "jest --config",
     "tdd": "jest --watchAll"
   },
-  "files": [
-    "/bsconfig.json",
-    "/postinstall.js",
-    "/src",
-    "/ppx_src",
-    "/ppx",
-    "/ppx.cmd",
-    "/ppx-linux.exe",
-    "/ppx-osx.exe"
-  ],
   "devDependencies": {
     "jest": "^26.5.2"
   }
