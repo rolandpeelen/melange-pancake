@@ -9,6 +9,5 @@ _opam
 *.native
 *.install
 *.bs.js
-*.js
 ppx_src/_release
 ppx_src/node_modules
