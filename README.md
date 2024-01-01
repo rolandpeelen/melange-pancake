@@ -2,9 +2,35 @@
 Named after the famous 40mm Canon 'pancake' lens, a lens that you'd always want
 with you since its so small.
 
-Builds upon:
-- [Decco](https://github.com/reasonml-labs/decco)
-- [Lenses-PPX](https://github.com/Astrocoders/lenses-ppx)
+# Get started
+Install
+```
+opam install melange-pancake
+```
+
+Add the library to your dune file. Note that this needs to happen in something that's pre-processed by melange.
+```
+(melange.emit
+ (target main)
+ (libraries 
+   melange-pancake.lib)
+ (preprocess
+  (pps melange.ppx melange-pancake.ppx)))
+```
+
+Use it in your project
+```
+open Pancake;
+
+[@pancake]
+type t = {name: string}
+
+let t = {name: "hello"}
+
+let () = t |> Lens.view(tNameLens) |> Js.log;
+```
+
+
 
 # Motivation
 Internally at [Tenzir](https://tenzir.com/) and also in my side-project 
@@ -139,9 +165,3 @@ let emptyAccount = {company: None};
 ```
 
 For more examples, check the tests.
-
-# Todo:
-
-[ ] - Automatically build Prisms for Sum Types
-
-[ ] - Prism composition
