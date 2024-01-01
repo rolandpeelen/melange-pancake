@@ -1,0 +1,3 @@
+(executable
+ (name PancakePpxBin)
+ (libraries melange-pancake.ppx ppxlib))

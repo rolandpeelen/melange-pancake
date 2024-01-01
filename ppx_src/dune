@@ -1,3 +1,0 @@
-(dirs bin src)
-(library
- (name ppx_src))

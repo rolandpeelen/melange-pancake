@@ -1,0 +1,11 @@
+(library
+  (name PancakePpx)
+  (public_name melange-pancake.ppx)
+  (libraries 
+    ppxlib
+    reason)
+  (flags 
+    (:standard -w -9)) ; 9 = labels not bound in record pattern
+  (kind ppx_rewriter)
+  (preprocess
+   (pps ppxlib.metaquot)))

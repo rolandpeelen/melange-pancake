@@ -1,0 +1,7 @@
+(melange.emit
+ (target test)
+ (libraries 
+   melange-jest.jest
+   melange-pancake.lib)
+ (preprocess
+  (pps melange.ppx melange-pancake.ppx)))

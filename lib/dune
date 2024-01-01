@@ -1,0 +1,6 @@
+(library
+ (name Pancake)
+ (public_name melange-pancake.lib)
+ (modes melange)
+ (preprocess
+  (pps melange.ppx melange-pancake.ppx)))
