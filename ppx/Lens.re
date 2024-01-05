@@ -100,4 +100,4 @@ class mapper = {
 
 let structure_mapper = (_, s) => (new mapper)#structure(s);
 
-Ppxlib.Driver.V2.register_transformation(~preprocess_impl=structure_mapper, "pancake");
+Ppxlib.Driver.V2.register_transformation(~impl=structure_mapper, "pancake");
