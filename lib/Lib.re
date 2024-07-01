@@ -52,6 +52,10 @@ module List = {
 
 module Option = {
   let getOrElse = (x, o) => Belt.Option.getWithDefault(o, x);
+  let sequence =
+    fun
+    | (Some(a), Some(b)) => Some((a, b))
+    | _ => None;
 };
 
 module Result = {

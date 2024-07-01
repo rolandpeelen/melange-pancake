@@ -1,6 +1,7 @@
 open Lib.Function.Infix;
 
 type t('a, 'b) = {
+  path: option(string),
   get: 'a => 'b,
   set: ('b, 'a) => 'a,
 };
@@ -12,6 +13,10 @@ let over = (lens: t('a, 'b), fn: 'b => 'b, state: 'a): 'a =>
   lens.set(lens.get(state) |> fn, state);
 
 let pipe = (l0: t('a, 'b), l1: t('b, 'c)): t('a, 'c) => {
+  path:
+    (l0.path, l1.path)
+    |> Lib.Option.sequence
+    |> Option.map(((a, b)) => a ++ "." ++ b),
   get: l0.get >> l1.get,
   set: l1.set >> over(l0),
 };
@@ -28,20 +33,30 @@ module Infix = {
 
 module Option = {
   let orElse = (default: 'b): t('a, 'b) => {
+    path: None,
     get: Lib.Option.getOrElse(default),
     set: (x, _) => Some(x),
   };
 
-  let orExn: t('a, 'b) = {get: Belt.Option.getExn, set: (x, _) => Some(x)};
+  let orExn: t('a, 'b) = {
+    path: None,
+    get: Belt.Option.getExn,
+    set: (x, _) => Some(x),
+  };
 };
 
 module Result = {
   let orElse = (default: 'b): t('a, 'b) => {
+    path: None,
     get: Lib.Result.getOrElse(default),
     set: (x, _) => Ok(x),
   };
 
-  let orExn: t('a, 'b) = {get: Belt.Result.getExn, set: (x, _) => Ok(x)};
+  let orExn: t('a, 'b) = {
+    path: None,
+    get: Belt.Result.getExn,
+    set: (x, _) => Ok(x),
+  };
 };
 
 module Array = {
@@ -53,6 +68,7 @@ module Array = {
         variables. Wraps around when using negative values.
      */
   let atOrElse = (i: int, default): t(array('a), 'a) => {
+    path: None,
     get: (xs: array('a)) => {
       (
         i < 0
@@ -65,6 +81,7 @@ module Array = {
   };
 
   let atOrExn = (i: int): t(array('a), 'a) => {
+    path: Some("[" ++ string_of_int(i) ++ "]"),
     get: (xs: array('a)) => {
       i < 0
         ? Belt.Array.getExn(xs, Belt.Array.length(xs) + i)
@@ -74,7 +91,8 @@ module Array = {
   };
 
   let find = (e: 'a): t(array('a), option('a)) => {
-    get: Js.Array.find(y => y === e),
+    path: None,
+    get: Js.Array.find(~f=y => y === e),
     set: (x: option('a), xs: array('a)) =>
       switch (x) {
       | Some(x) => Belt.Array.map(xs, y => y === e ? x : y)
@@ -83,7 +101,8 @@ module Array = {
   };
 
   let findByLens = (e: 'b, lens: t('a, 'b)): t(array('a), option('a)) => {
-    get: Js.Array.find(y => view(lens, y) === e),
+    path: None,
+    get: Js.Array.find(~f=y => view(lens, y) === e),
     set: (x: option('a), xs: array('a)) =>
       switch (x) {
       | Some(x) => Belt.Array.map(xs, y => view(lens, y) === e ? x : y)
@@ -96,18 +115,20 @@ module List = {
   /* Clones the full list when setting, no mutation
      returns the original list when setting out of bounds */
   let atOrElse = (i: int, default): t(list('a), 'a) => {
+    path: None,
     get: (xs: list('a)) => {
       (
         i < 0
           ? Belt.List.get(xs, Belt.List.length(xs) + i)
           : Belt.List.get(xs, i)
       )
-      |>Belt.Option.getWithDefault(_, default);
+      |> Belt.Option.getWithDefault(_, default);
     },
     set: (x: 'a, xs: list('a)) => Lib.List.updateAtIndex(xs, i, x),
   };
 
   let atOrExn = (i: int): t(list('a), 'a) => {
+    path: None,
     get: (xs: list('a)) => (
       i < 0
         ? Belt.List.getExn(xs, Belt.List.length(xs) + i)
@@ -117,6 +138,7 @@ module List = {
   };
 
   let find = (e: 'a): t(list('a), option('a)) => {
+    path: None,
     get: Lib.List.findBy(y => y === e),
     set: (x: option('a), xs: list('a)) =>
       switch (x) {
@@ -126,6 +148,7 @@ module List = {
   };
 
   let findByLens = (e: 'b, lens: t('a, 'b)): t(list('a), option('a)) => {
+    path: None,
     get: Lib.List.findBy(y => view(lens, y) === e),
     set: (x: option('a), xs: list('a)) =>
       switch (x) {

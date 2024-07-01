@@ -19,9 +19,20 @@ let createLenses = (~typeName, ~fields, ()) => {
         );
       let getter = [%expr values => [%e getAttr]];
 
+      let path = [%expr
+        Some(
+          [%e
+            Ast_helper.Exp.constant(
+              Ast_helper.Const.string(field.pld_name.txt),
+            )
+          ],
+        )
+      ];
+
       let getterAndSetter =
         Ast_helper.Exp.record(
           [
+            ({loc, txt: Lident("path")}, path),
             ({loc, txt: Lident("set")}, setter),
             ({loc, txt: Lident("get")}, getter),
           ],
@@ -77,7 +88,7 @@ module StructureMapper = {
     | Error(s) => fail(ptype_loc, s)
     };
   };
-  let mapStructureItem = (mapper, { pstr_desc } as structureItem) =>
+  let mapStructureItem = (mapper, {pstr_desc} as structureItem) =>
     switch (pstr_desc) {
     | Pstr_type(_recFlag, decls) =>
       let valueBindings = decls |> List.map(mapTypeDecl) |> List.concat;

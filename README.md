@@ -165,3 +165,54 @@ let emptyAccount = {company: None};
 ```
 
 For more examples, check the tests.
+
+# Other notes
+One of the other things added here is a 'path' for Js interop. This comes from a very specific use-case, where we need type-safety where we can't have any. For instance, when dynamically query'ing an object, or specifying a subquery.
+
+```js
+someDbQueryBuilder
+.from("table")
+.eq("foo", baar)
+```
+
+There is currently no way to correctly type this in Reason, or at least say that when you run 'eq' that the type of the lhs is the same as the type on the rhs. With this `path`, you can create a wrapper that does this.
+```Reason
+open Pancake;
+
+module Table = {
+  [@pancake]
+  type t = {
+    str: string,
+    bool,
+  };
+};
+
+[@pancake]
+type db = {table: Table.t};
+
+module QueryBuilder = {
+  type t;
+
+  external make: unit => t = "make";
+  [@mel.send.pipe: t] external run: unit => 'a = "make";
+  [@mel.send.pipe: t] external from': string => t = "from";
+
+  [@mel.send.pipe: t] external eq': (string, 'a) => t = "insert";
+
+  let from = (l: Lens.t(db, 'table), builder: t) => {
+    let path = Belt.Option.getExn(l.path);
+    builder |> from'(path);
+  };
+  let eq = (l: Lens.t('table, 'column), c: 'column, builder: t) => {
+    let path = Belt.Option.getExn(l.path);
+    builder |> eq'(path, c);
+  };
+};
+
+let query =
+  QueryBuilder.make()
+  |> QueryBuilder.from(dbTableLens)
+  |> QueryBuilder.eq(Table.tStrLens, "some-string")
+//  |> QueryBuilder.eq(Table.tBoolLens, "some-string")
+  |> QueryBuilder.run();
+```
