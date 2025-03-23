@@ -1,0 +1,17 @@
+(version 0.1.1)
+
+(build
+ (progn
+  (when
+   %{pkg-self:dev}
+   (run dune subst))
+  (run dune build -p %{pkg-self:name} -j %{jobs} @install)))
+
+(depends dune melange)
+
+(source
+ (fetch
+  (url
+   https://github.com/melange-community/melange-jest/releases/download/0.1.1/melange-jest-0.1.1.tbz)
+  (checksum
+   sha256=c68340d4508f2a180c4881b696968fad1c853028aa72436fde16ebf2570ad6ee)))
